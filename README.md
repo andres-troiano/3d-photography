@@ -15,7 +15,7 @@ No requiere instalación
 Este paquete está pensado para un montaje experimental que no se pretende describir en detalle aquí.
 Requiere la librería "XPS_Matlab", disponible en la página web de Newport, la cual contiene los drivers del controlador.
 
-## Autor
+## Autores
 
 * **Andrés Troiano**
 * **Martín Argañaraz (colaborador)**
