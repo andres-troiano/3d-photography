@@ -18,7 +18,7 @@ Requiere la librería "XPS_Matlab", disponible en la página web de Newport, la 
 ## Autores
 
 * **Andrés Troiano**
-* **Martín Argañaraz (colaborador)**
+* **Martín Argañaraz** (colaborador)
 
 ## Licencia
 
