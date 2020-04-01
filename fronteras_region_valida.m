@@ -282,7 +282,7 @@ for q = 1:2
     grilla_mmy = C{q}(ind1,4);
 
     if q == 2
-        grilla_mmx = grilla_mmx-offset(1) + 12;
+        grilla_mmx = grilla_mmx-offset(1);
         grilla_mmy = grilla_mmy-offset(2);
     end
     
