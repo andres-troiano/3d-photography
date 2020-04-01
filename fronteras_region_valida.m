@@ -15,7 +15,7 @@ load([path_offset 'offset.mat']);
 % determinar el centro del cilindro 630
 frames = {'patron_34700630_camara_1.png', 'patron_34700630_camara_2.png'};
 
-close all,figure,hold on
+close all,figure(1),hold on
 XY = {[], []};
 % coordenadas de los puntos centrales de cada perfil, en mm. En columnas:
 % xc;yc
@@ -24,7 +24,6 @@ M = {nan(2,1), nan(2,1)};
 % haberlos juntado en XY, así no los tengo que volver a procesar
 s = nan; 
 for q = 1:2
-    frame = imread(fullfile(path_datos, frames{q}));
     
     I=imread(fullfile(path_datos, frames{q}));
     Iinfo=imfinfo(fullfile(path_datos, frames{q}));
@@ -95,23 +94,70 @@ centro_x = circulo(1);
 centro_y = circulo(2);
 r_teorico = circulo(3);
 
-t = linspace(0, 2*pi, 100);
+t = linspace(0, 2*pi, 100)';
 x_teorico = r_teorico * cos(t) + centro_x;
 y_teorico = r_teorico * sin(t) + centro_y;
 
 % plot(x_teorico, y_teorico, '--r')
 plot(centro_x, centro_y, '+r')
 plot(M{1}(1), M{1}(2), 'og')
-plot(M{2}(1), M{2}(2), 'om')
+plot(M{2}(1), M{2}(2), 'og')
 
 %%
 
 % ahora que tengo la posición del centro del sistema, armo la máscara que
 % necesito. Se compone de 2 cosas:
-% 1) mirar sólo un rango de ángulos
-% 2) mirar sólo un rango de radios
+% 1) mirar sólo un rango de radios
+% 2) mirar sólo un rango de ángulos
+
+% primero acoto el rango de radios, y al final genero 2 fronteras combinando
+% ambas cosas
+
+r_int = r_teorico - 40;
+r_ext = r_teorico + 40;
+
+% necesito tener separadas las partes de cada cámara. Ya sé que la parte
+% interna son los 1ros 100 y la externa los 2dos
+% parte radial
+R = {nan(200,2), nan(200,2)};
 
 for q = 1:2
+
+    t = {linspace(-1.2,0.1)', linspace(-2.3,-1)'};
+    m = {'--b', '--r'}; % markers
+    
+    x_int = centro_x + r_int*cos(t{q});
+    y_int = centro_y + r_int*sin(t{q});
+
+    x_ext = centro_x + r_ext*cos(t{q});
+    y_ext = centro_y + r_ext*sin(t{q});
+
+    plot(x_int, y_int, m{q})
+    plot(x_ext, y_ext, m{q})
+
+    % flipeo el externo para que vaya en el sentido del recorrido
+    x_ext = flipud(x_ext);
+    y_ext = flipud(y_ext);
+    
+    R{q}(:,:) = [[x_int;x_ext], [y_int;y_ext]];
+
+end
+
+%%
+
+% frontera total de una.
+F = {nan(1e3,2),nan(1e3,2)};
+
+for q = 1:2
+    
+    % Arranco con el x_ext y voy clockwise (aprovechando el orden en que se
+    % calculan las rectas, y el hecho de que los radios no los tengo
+    % sobreescritos)
+    
+    % marcadores que dicen en qué indices quedamos en la concatenación
+    j = 1;
+    k = 100; % porque sé que cada parte radial es un linspace de 100
+    F{q}(j:k,:) = [R{q}(101:200,1), R{q}(101:200,2)];
     
     if q == 1
         x = XY(1:s, 1);
@@ -124,30 +170,84 @@ for q = 1:2
     end
     
     alpha = calculo_angulo([0, 0], [0, 1], [M{q}(1), M{q}(2)], [centro_x, centro_y]);
-
+    
     alpha_izq = alpha + 35;
     alpha_der = alpha - 35;
     
-    a = tand(alpha+90); % esto lo emparché a mano
+    % otro parche horrible xq en la 1 me quedan invertidas las rectas izq y
+    % der
+    
+    if q == 1
+        alpha_der = alpha + 35;
+        alpha_izq = alpha - 35;
+    end
+    
+    a = tand(alpha+90); % esto está horriblemente emparchado. Debería entenderlo
+    if q==2
+        a=tand(90-alpha);
+    end
     y_recta = a*x + (centro_y - a*centro_x);
+    
+%     % ajusto finamente las rectas para armar la máscara
+%     % primero el X izquierdo
 
     a = tand(alpha_izq+90);
-    y_recta_izq = a*x + (centro_y - a*centro_x);
+    if q==2
+        a=tand(90-alpha_izq);
+    end
+    
+    if q==1
+        x_izq=linspace(107,142)';
+        x_izq = flipud(x_izq);
+    end
+    
+    if q==2
+        x_izq=linspace(13,62)';
+    end
+    y_izq = a*x_izq + (centro_y - a*centro_x);
+    
+    % agrego a las fronteras
+    j = k+1;
+    k = k + numel(x_izq);
+    F{q}(j:k,:) = [x_izq, y_izq];
+    
+    j = k+1;
+    k = k + 100;
+    F{q}(j:k,:) = [R{q}(1:100,1), R{q}(1:100,2)];
+    
+    % ahora la recta derecha
+    if q==1
+        x_der=linspace(132,213)';
+    end
+    
+    if q==2
+        x_der=linspace(112,156)';
+    end
 
     a = tand(alpha_der+90);
-    y_recta_der = a*x + (centro_y - a*centro_x);
+    if q==2
+        a=tand(90-alpha_der);
+    end
+    y_der = a*x_der + (centro_y - a*centro_x);
+    
+    % agrego a la frontera
+    j = k+1;
+    k = k + numel(x_der);
+    F{q}(j:k,:) = [x_der, y_der];
     
     plot(centro_x, centro_y, '+b')
     
     if q == 1
-        plot(x, y_recta_izq, '--b')
-        plot(x, y_recta_der, '--b')
+        plot(x_izq, y_izq, '--b')
+        plot(x_der, y_der, '--b')
     end
     
     if q == 2
-        plot(x, y_recta_izq, '--r')
-        plot(x, y_recta_der, '--r')
+        plot(x_izq, y_izq, '--r')
+        plot(x_der, y_der, '--r')
     end
+    
+    plot(x, y_recta, '--k')
     
 end
 
@@ -156,30 +256,19 @@ margen = 50;
 xlim([min(XY(:, 1))-margen max(XY(:, 1))+margen])
 ylim([min(XY(:, 2))-margen max(XY(:, 2))+margen])
 
-%%
-
-% ahora acoto el rango de radios, y al final genero 2 fronteras combinando
-% ambas cosas
-
-r_int = r_teorico - 50;
-r_ext = r_teorico + 50;
-
-x_int = centro_x + r_int*cos(t);
-y_int = centro_y + r_int*sin(t);
-
-x_ext = centro_x + r_ext*cos(t);
-y_ext = centro_y + r_ext*sin(t);
-
-plot(x_int, y_int, '--k')
-plot(x_ext, y_ext, '--k')
+% figure(2),hold on, grid on
+% for q = 1:2
+%     plot(F{q}(:,1), F{q}(:,2), '--')
+% end
+% 
+% axis equal
 
 %%
 
-% ahora genero la frontera con todo
 % chequeo que lo estoy haciendo bien con datos de prueba
-
 load([path_calibracion 'intersections.mat']);
 
+figure(1)
 for q = 1:2
 
     ind1=C{q}(:,6)>.4;
@@ -193,16 +282,25 @@ for q = 1:2
     grilla_mmy = C{q}(ind1,4);
 
     if q == 2
-        grilla_mmx = grilla_mmx-offset(1);
+        grilla_mmx = grilla_mmx-offset(1) + 12;
         grilla_mmy = grilla_mmy-offset(2);
     end
     
+%     % le tiro un inpolygon a ver si así nomás anda. No creo
+%     % para la parte radial, en la interior hay que negar que esté adentro
+    ind = inpolygon(grilla_mmx, grilla_mmy, F{q}(:,1), F{q}(:,2));
+    
     if q == 1
-        plot(grilla_mmx,grilla_mmy,'.c')
+%         plot(grilla_mmx,grilla_mmy,'.c')
+        plot(grilla_mmx(ind),grilla_mmy(ind),'.c')
     end
     
     if q == 2
-        plot(grilla_mmx,grilla_mmy,'.m')
+%         plot(grilla_mmx,grilla_mmy,'.m')
+        plot(grilla_mmx(ind),grilla_mmy(ind),'.m')
     end
     
 end
+
+% guardo la matriz de fronteras en el directorio de los cilindros
+save(fullfile(path_datos, 'fronteras'),'F');
