@@ -144,7 +144,6 @@
 % las 2 cámaras. Igual me va a quedar una dispersión.
 
 clear variables
-% r = 59.975/2;
 path_calibracion = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion47\';
 load([path_calibracion 'centros.mat']);
 
@@ -180,14 +179,16 @@ end
 % hay que tirar los nan antes de promediar
 ind = ~isnan(error(:,1));
 
-% offset_x, error_offset_x, offset_y, error_offset_y
-offset_hexagono = [mean(error(ind,3)), std(error(ind,3)), mean(error(ind,4)), std(error(ind,4))];
+% offset_x, offset_y, error_offset_x, error_offset_y
+% le pongo un - adelante para que tenga el mismo signo que el offset del
+% trapecio
+offset_hexagono = [-mean(error(ind,3)), -mean(error(ind,4)), std(error(ind,3)), std(error(ind,4))];
 
 save(fullfile(path_calibracion, 'offset_hexagono'),'offset_hexagono');
 
 close all
 f1=figure; hold on, grid on
-plot3(error(:,1), error(:,2), error(:,3) - offset_hexagono(1),'.')
+plot3(error(:,1), error(:,2), error(:,3) + offset_hexagono(1),'.')
 xlabel('X (mm)')
 ylabel('Y (mm)')
 zlabel('Error en offset X (mm)')
@@ -195,17 +196,20 @@ view(28,26)
 saveas(f1, [path_calibracion 'graficos_centros\offset_en_X.png'])
 
 f2=figure; hold on, grid on
-plot3(error(:,1), error(:,2), error(:,4) - offset_hexagono(3),'.')
+plot3(error(:,1), error(:,2), error(:,4) + offset_hexagono(2),'.')
 xlabel('X (mm)')
 ylabel('Y (mm)')
 zlabel('Error en offset Y (mm)')
 view(30,24)
 saveas(f2, [path_calibracion 'graficos_centros\offset_en_Y.png'])
 
-fprintf('Std del offset en X: %.3f mm\nStd del offset en Y: %.3f mm\n', offset_hexagono(2), offset_hexagono(4))
+fprintf('Std del offset en X: %.3f mm\nStd del offset en Y: %.3f mm\n', offset_hexagono(3), offset_hexagono(4))
 
 %% genero las FC
 fronteraZonaEfectiva(path_calibracion);
+
+%% genero la F
+
 
 %% mido cilindros
 
@@ -226,13 +230,13 @@ nominales = [139.707, 168.310, 177.805];
 
 frames_cilindro = {[], []};
 
-for f = 1:3
+for f = 1%:3
     close all
     for q = 1:2
         % ojo: le estoy pasando 2 veces FC, porque quiero medir antes de
         % calcular el +-35
         frames_cilindro{q} = [path_datos frame_cilindro{f} '_camara_' num2str(q) '.png'];
     end
-    [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron_con_hexagono(frames_cilindro, id_cilindro{f}, px2mmPol, offset_hexagono, FC, FC, path_datos); % con las fronteras en el offset
+    [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron(frames_cilindro, id_cilindro{f}, px2mmPol, offset_hexagono, FC, FC, path_datos); % con las fronteras en el offset
     fprintf([id_cilindro{f} '\nError 2 cámaras: %.3f mm\nError C1: %.3f mm, Error C2: %.3f mm\nCentro global: (%.3f, %.3f)\nCentro C1: (%.3f, %.3f)\nCentro C2: (%.3f, %.3f)\n\n'], 2*r_teorico - nominales(f), 2*r_individual(1) - nominales(f), 2*r_individual(2) - nominales(f), centro_x, centro_y, centro_individual{1}(1), centro_individual{1}(2), centro_individual{2}(1), centro_individual{2}(2))
 end
