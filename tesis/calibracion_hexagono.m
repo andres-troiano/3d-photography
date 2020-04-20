@@ -209,7 +209,7 @@ fprintf('Std del offset en X: %.3f mm\nStd del offset en Y: %.3f mm\n', offset_h
 fronteraZonaEfectiva(path_calibracion);
 
 %% genero la F
-
+% ejecuto "fronteras_region_valida_con_hexagono"
 
 %% mido cilindros
 
@@ -230,7 +230,7 @@ nominales = [139.707, 168.310, 177.805];
 
 frames_cilindro = {[], []};
 
-for f = 1%:3
+for f = 1:3
     close all
     for q = 1:2
         % ojo: le estoy pasando 2 veces FC, porque quiero medir antes de
