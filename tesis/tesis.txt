@@ -1,0 +1,272 @@
+1) calibración con:
+    trapecio - 42 (barrido) + 43 (offset) - script: "calibracion"
+    	barrido de offset:
+    		C1 - esquina izquierda
+    		C2 - esquina derecha
+    		ojo: esto es en pixels. En mm, la esquina común es siempre la derecha, ie, la que está a X más grande.
+    hexágono - 47
+    corona - 44, 45 (pixel, mm)
+    
+2) con cada una de ellas, medir cilindros - 48
+
+3) con la calibración de trapecio o hexágono, seguir subsampleando usando SVD en lugar de polinomios a ver cuál la menor cantidad de puntos que puedo usar
+
+creo 2 directorios nuevos para esta etapa del trabajo:
+Downloads/datos_calibraciones
+Downloads/scripts_calibraciones
+
+CALIBRACIÓN TRAPECIO
+====================
+medición 42 - está la calibración
+43 idem
+
+CALIBRACIÓN HEXÁGONO
+====================
+
+190, 475
+k=420
+el k anterior es 402
+
+Estoy viendo el match que encuentra, pero no entiendo por qué lo considera match
+pedirle a martín si lo puede debuguear (re chanta pero bue)
+
+LA MÁSCARA DEPENDE DE LA CALIBRACIÓN (porque no hay referencia absoluta)
+el offset entre trapecio y hexágono viene del hecho de que el offset del trapecio se calcula con el mismo en posición horizontal.
+Entonces las fronteras hay que guardarlas en el directorio de la calibración
+
+TENDRÍA QUE HABER MEDIDO EL CILINDRO N VECES. Tengo una medición así, servirá?
+    esto está comentado en 6/1/2020. La medición está hecha en "33". Después de eso le di alto golpe al láser 1, así que no sirven esos datos. Pero necesito otros equivalentes, junto con 3 calibraciones nuevas. Me parece muy poco factible conseguir eso. Cómo podemos cuantificar la calidad de la calibración sin eso?
+
+calibración trapecio:
+    se calcula con el script "calibracion"
+    sin usar las fronteras en la calibración ni en el cálculo del offset
+    34700530: diámetro 139.552, nominal 139.707
+    34700630: diámetro 168.124, nominal 168.310
+    34700730: diámetro 177.630, nominal 177.805
+    en todos los casos el error es aprox 200 um
+    
+    con las fronteras:
+    34700530: diámetro 139.050
+    34700630: diámetro 167.617
+    34700730: diámetro 177.123
+    el error también es uniforme, en este caso de 700 um
+    
+04/04/2020
+Hago la calibración del hexágono. A pesar de que todavía no resolví esos pocos puntos sin detectar, puedo seguir laburando en lo que sigue
+la calibración 1 pareciera estar mal?? Estoy laburando en calibracion_hexagono.
+por lo pronto el tema de los puntos mal detectados no parece ser un problema, porque de todos modos hay descarte alrededor. Aunque el descarte podría deberse a eso. Además, justo el problema de calibraicón lo estoy teniendo en la misma cámara donde no pude detectar esos puntos.
+
+CORONA
+calculateIntersectionsCorona_mismo_radio
+
+intersecciones
+    tiene las coord de las esquinas en pixels. Cada celda es 1 cámara, y en cada columna (o fila) hay 9 intersecciones correspondientes a 1 radio
+    
+pxVsMm
+    es la conversión de intersecciones. En las 1ras 2 columnas tiene eso, y en las otras 2 tiene las coordenadas correspondientes en mm.
+    Usando la cal del trapecio que vengo usando pero sin restringir a zona válida.
+    
+Yo había promediado en z. Eso parece que está tenido en cuenta en intersecciones, pero no veo de qué manera
+OJO: el .mat esquinas_radio_X parece estar guardando por error pxVsMm, que ya estaba siendo guardado antes. Yo creo que ahí quería guardar "esquinas"
+Lo corregí. Ahora esquinas_radio_X tiene todas las esquinas del radio, en promedio, con las 2 cámaras juntas, en mm. Aquellos puntos que cayeron en la zona de calibración de las 2 cámaras se promediaron entre sí.
+Mi objetivo era conocer la posición de cada esquina para que me sirva como patrón.
+Voy a probar de calibrar así de última voy armando el workflow y cambio lo que haga falta.
+medición44 está para usar en mm, y 45 en pixels
+
+mediciones viejas de cilindros:
+    medicion14, 30, 31, 33
+    
+19/04/2020
+Avancé con calibracion_hexagono. El offset que le tengo que aplicar a una de las cámaras tiene la siguiente dispersión:
+    Std del offset en X: 0.038 mm
+    Std del offset en Y: 0.015 mm
+Me gusta.
+Para medir cilindros correctamente me falta aplicar las 2 fronteras que tengo ya implementadas en "calibracion" (del trapecio).
+Mido los patrones, primero sin considerar el +- 35, para ir viendo qué pinta tienen las cosas. Resultados:
+
+Sin usar el +-35:
+    34700530
+    Error 2 cámaras: -0.053 mm
+    Error C1: -0.117 mm, Error C2: 0.109 mm
+    Centro global: (180.382, 557.841)
+    Centro C1: (180.385, 557.797)
+    Centro C2: (180.391, 557.933)
+
+    34700630
+    Error 2 cámaras: -0.087 mm
+    Error C1: -0.142 mm, Error C2: 0.183 mm
+    Centro global: (181.180, 557.870)
+    Centro C1: (181.180, 557.827)
+    Centro C2: (181.200, 558.017)
+
+    34700730
+    Error 2 cámaras: -0.076 mm
+    Error C1: -0.073 mm, Error C2: 0.130 mm
+    Centro global: (181.090, 557.885)
+    Centro C1: (181.069, 557.861)
+    Centro C2: (181.094, 558.000)
+    
+Usando el +-35:
+    34700530
+    Error 2 cámaras: -0.108 mm
+    Error C1: -0.001 mm, Error C2: -0.036 mm
+    Centro global: (180.395, 557.816)
+    Centro C1: (180.335, 557.828)
+    Centro C2: (180.390, 557.857)
+
+    34700630
+    Error 2 cámaras: -0.141 mm
+    Error C1: -0.166 mm, Error C2: 0.089 mm
+    Centro global: (181.194, 557.846)
+    Centro C1: (181.189, 557.818)
+    Centro C2: (181.200, 557.968)
+
+    34700730
+    Error 2 cámaras: -0.100 mm
+    Error C1: 0.142 mm, Error C2: 0.049 mm
+    Centro global: (181.097, 557.876)
+    Centro C1: (180.983, 557.930)
+    Centro C2: (181.093, 557.958)
+    
+Algo que no me gusta nada es que el laser 1 parece estar desalineado. Se me ocurren 2 opciones:
+1) Primero medí los cilindros y el trapecio, luego el laser 1 se desalineó, y después medí el hexágono
+2) Dado que lo único que está corrido son las fronteras de calibración (no así los perfiles), y estas vienen de el método de detección de la esquina, puede ser que este corrimiento sea producto o bien de la geometría del hexágono comparado con el trapecio, o del método para encontrar el offset. No se me ocurre qué en concreto, pero esas son las 2 cosas que determinan a las FC.
+Es muy curioso que agregando F aumenta mucho el error combinado. Que se achique el error individual no me extraña.
+Notar que a diferencia de lo que pasaba con el trapecio, acá el error de las 2 cámaras combinadas es continuo.
+
+20/04/2020
+Calibro con la corona.
+Tengo 2 mediciones en pixels de la misma. Uno de los 2 lo tengo que convertir a mm con una de las 2 calibraciones que tengo: hexágono o trapecio. La del hexágono no me conviene porque recorta mucho la C1, salvo que fuera posible ignorar las fronteras. La del trapecio en cambio tiene un error de base de 200 um, con lo cual la calibracion de la corona seguro va a ser bastante mala. Por ahora uso la del trapecio.
+
+Medí los cilindros con la corona. Resulta ser que la corona no cubre la zona necesaria. Alcanza para medir el patrón más chico, pero los otros 2 ya no. Del del medio la C1 alcanza a ver algunos puntos. Resultados:
+
+34700530
+Error 2 cámaras: -0.071 mm
+Error C1: -0.306 mm, Error C2: 0.094 mm
+Centro global: (87.615, 512.274)
+Centro C1: (87.701, 512.189)
+Centro C2: (87.633, 512.356)
+
+34700630
+Error 2 cámaras: -0.009 mm
+Error C1: -0.495 mm, Error C2: 0.011 mm
+Centro global: (88.411, 512.359)
+Centro C1: (88.475, 512.125)
+Centro C2: (88.413, 512.369)
+
+Observación: por ahora no implementé el +-35
+
+charla con martín
+=================
+trapecio nominal
+    59.985
+    
+se puede calcular el offset sólo a apartir de los círculos, porque con 30º taubin ajusta bien
+    Esto lo tomamos como válido
+en todo caso la pregunta es por qué los centros no coinciden mejor. Los 700 se propagan a partir de ese corrimiento. Martín lo simuló
+    Esto viene de la estructura del offset en función de X e Y
+    Chequear que esta estructura esté en el barrido viejo
+    Hay que entender a qué se debe esta estructura, pero por lo pronto usar los centros es una solución. Para mayor confianza puedo usar los 3 círculos
+    En caso de no entenderlo, se puede omitir
+    
+Ver el offset en función de XY con el hexágono. Puede ser que con el hexágono esté dando mejor porque con el trapecio la esquina común la veo en menos casos que en el hexágono
+
+C1 hexágono: ver si esa desalineación está presente viendo la C1 sola, sin trasladar nada
+mandarle los gráficos de los puntos usados, viendo que coincidan
+
+tareas
+======
+Chequear que la estructura del offset esté en el barrido viejo
+    No se ve esa estructura. El error es de aprox 150 um (mandar figuras)
+    Por qué puede ser?
+Calcular un nuevo offset, promediando las distancias entre los centros de los 3 círculos
+    lo dejo para otro momento porque no necesito mandárselo a Martín
+Ver el offset en función de XY con el hexágono
+    ya lo tengo. En "graficos_centros"
+C1 hexágono: ver si la desalineación está presente viendo la C1 sola, sin trasladar nada
+    sí, está. Yo creo que si no hubiera estado la mesa, el barrido habría sido suficiente, pero el cilindro no estaba bien centrado.
+mandarle los gráficos de los puntos usados, viendo que coincidan
+
+23/04/2020
+Calibración vieja de trapecio: medicion32, 27
+Offset correspondiente:
+28,29,34
+
+En los offset viejos, si bien tienen menos puntos que el nuevo, se ve lo sgte.: los barridos son de 100x150 mm, y el rango de valores es de 150 um aprox
+
+27/04/2020
+Busqué la causa de la estructura en el offset del hexágono, no por su magnitud, sino porque significa que el modelo no está copiando bien los datos. Modifiqué el algoritmo para que el offset se calcule sólo en +-35, lo cual está en "calibracion_hexagono_2". Además calculé el ángulo que ve la C1, porque veía menos de lo esperado, y queremos asegurarnos que está dentro del margen en el cual vimos que el error de Taubin es despreciable. Ambos resultados están a continuación:
+    
+    34700530
+    El ángulo que ve C1 es 41º
+    Error 2 cámaras: -0.061 mm
+    Error C1: -0.001 mm, Error C2: -0.036 mm
+    Centro global: (180.386, 557.845)
+    Centro C1: (180.335, 557.828)
+    Centro C2: (180.375, 557.862)
+    
+    34700630
+    El ángulo que ve C1 es 45º
+    Error 2 cámaras: -0.103 mm
+    Error C1: -0.166 mm, Error C2: 0.092 mm
+    Centro global: (181.187, 557.869)
+    Centro C1: (181.189, 557.818)
+    Centro C2: (181.184, 557.975)
+    
+    34700730
+    El ángulo que ve C1 es 46º
+    Error 2 cámaras: -0.064 mm
+    Error C1: 0.142 mm, Error C2: 0.049 mm
+    Centro global: (181.089, 557.898)
+    Centro C1: (180.983, 557.930)
+    Centro C2: (181.078, 557.963)
+    
+TRAPECIO:
+    hice una modificación "calibracion_2" que lo que hace es en 1er lugar calcular el +-35 con cada cámara, y luego calcular el offset como la distancia entre los centros de los ajustes que hace cada cámara por separado, esto calculado con cada 1 de los 3 cilindros, y luego promediando.
+    
+    Los offset en los 3 casos dieron:
+    
+        Patrón 34700530, offset = (51.479, 30.844)
+        Patrón 34700630, offset = (51.531, 30.915)
+        Patrón 34700730, offset = (51.527, 30.938)
+    
+    Los resultados son:
+    
+        El ángulo que ve C1 es 54º
+        El ángulo que ve C2 es 70º
+        34700530
+        Error 2 cámaras: -0.126 mm
+        Error C1: -0.245 mm, Error C2: 0.007 mm
+        Centro global: (87.864, 512.067)
+        Centro C1: (87.987, 512.170)
+        Centro C2: (87.954, 512.115)
+
+        El ángulo que ve C1 es 56º
+        El ángulo que ve C2 es 68º
+        34700630
+        Error 2 cámaras: -0.115 mm
+        Error C1: -0.172 mm, Error C2: 0.186 mm
+        Centro global: (88.655, 512.124)
+        Centro C1: (88.747, 512.241)
+        Centro C2: (88.766, 512.257)
+
+        El ángulo que ve C1 es 57º
+        El ángulo que ve C2 es 65º
+        34700730
+        Error 2 cámaras: -0.083 mm
+        Error C1: -0.166 mm, Error C2: 0.216 mm
+        Centro global: (88.554, 512.151)
+        Centro C1: (88.649, 512.244)
+        Centro C2: (88.663, 512.282)
+    
+    Los cambios fueron que todos los errores globales se acercaron más a 100 um (el más chico se achicó mucho y los otros 2 se agrandaron. Creo que esto es consistente con el hecho de haber promediado el offset, cuando antes yo usaba el offset "propio" de cada cilindro para cada medición). Por otro lado el error de la C2, para el patrón más chico cambió (se achicó). Esto podría ser consecuencia de estar calculando el +-35 individualmente para cada cámara.
+    
+20-06-2020
+==========
+CÁLCULO RESIDUOS POLINOMIOS
+script: residuos_polinomio.m
+Uso la calibración del hexágono (medicion47). Tanto en X como en Y se ve una estructura en PX y en PY. El error aumenta para PX y PY chicos. En X el error máximo es de 500 um, en Y 150 um.
+Por qué será?
+Esto es dentro de la zona válida
+
+ESTO MARTÍN YA LO MIDE, Y LO PUSE EN EL INFORME

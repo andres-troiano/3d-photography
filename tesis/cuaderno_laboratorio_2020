@@ -1,0 +1,604 @@
+13/10/2020
+==========
+El directorio de trabajo que estoy usando en esta etapa, en la vaio es:
+	/home/andres/Documents/MATLAB
+analicé las pruebas hechas con la aguja. Usé
+	"aguja_analisis.m"
+analicé cómo cambia el ajuste del polinomio si uno usa pixels o mm como variable independiente. Dio igual. Usé:
+	script: "cuadrados_minimos"
+	funciones: "c_minimos_al_derecho", "c_minimos_al_reves"
+	
+16/10/2020
+==========
+el script para trabajar con el trapecio es:
+	"calibracion_trapecio_2020.m". Es una bajada de "calibracion.m" de github
+veo indicadores de que el directorio de donde estoy sacando mis datos y scripts está desactualizado.
+	Puedo recuperar el último directorio de trabajo?
+	Ojo que en general las calibraciones que esté cargando no van a tener validez. Tengo que correr todos los pasos previos
+buscar el directorio de trabajo, porque la parte de full_calibration no está en GH y podría estar desactualizada
+
+28/10/2020
+==========
+grafiqué la misma punta vista desde 2 cámaras (del barrido de offset) para ilustrar cómo se referencian las cámaras. Está hecho con el script "calculo_offset_prueba.m"
+
+8/11/2020
+==========
+quiero un gráfico del cálculo del offset para el hexágono. Quiero mostrar 1 punto del barrido, con los perfiles de cada cámara y el centro que encuentra cada una (van a tener coordenadas distintas)
+Esto lo hago con el script "grafico_centros_hexagono.m"
+
+==========================
+========== 2021 ==========
+==========================
+
+3/2/2021
+========
+nicolás propone no tirar los puntos que se salen del modelo del polinomio, xq ese modelo no tiene por qué ser correcto, y sospecha que esa sea la causa del bias
+
+en "home/DIRECTORIO TESIS" creo una subcarpeta "2021" y ahí meto copias de los scripts que necesito, con sufijo "_2021", así como también los datos, para no sobreescribir los resultados que ya tengo.
+
+5/2/2021
+========
+Aparentemente los scripts que venía usando hasta ahora son los de la carpeta "home/MATLAB - apolinario"
+los puntos que quiere recuperar nicolás, están adentro o afuera de las fronteras?
+puedo levantar primero la restricción que pide nico, ver si "used points" cambia (no debería), después levanto la otra y veo que pasa
+posibles causas del bias: estructura zarpada del offset
+lo que tengo armado es con los centros coincidentes, pero al final no uso eso, sino el offset
+    cuál script va en lugar de ese?
+    había un script "calibracion_trapecio" que es el que tendría que haber usado de base en lugar de "calibracion". Ahí eso está correcto, así que copié la celda correspondiente (la última)
+    
+El output de haber medido sin tirar los puntos que se alejan de los polinomios (pero usando las fronteras) es:
+
+    34700530
+    El angulo que ve C1 es 54
+    El angulo que ve C2 es 70
+    Error 2 cámaras: -0.708 mm
+    Error C1: -0.192 mm, Error C2: 0.005 mm
+    Centro global: (88.201, 512.062)
+    Centro C1: (87.966, 512.190)
+    Centro C2: (88.218, 512.441)
+
+    34700630
+    El angulo que ve C1 es 56
+    El angulo que ve C2 es 68
+    Error 2 cámaras: -0.714 mm
+    Error C1: -0.151 mm, Error C2: 0.195 mm
+    Centro global: (88.998, 512.109)
+    Centro C1: (88.742, 512.252)
+    Centro C2: (89.031, 512.590)
+
+    34700730
+    El angulo que ve C1 es 57
+    El angulo que ve C2 es 65
+    Error 2 cámaras: -0.696 mm
+    Error C1: -0.157 mm, Error C2: 0.231 mm
+    Centro global: (88.901, 512.127)
+    Centro C1: (88.649, 512.251)
+    Centro C2: (88.930, 512.618)
+    
+Los gráficos se ven normales.
+
+8/2/2021
+========
+Nicolás me pide que al encontrar las esquinas en el espacio de pixels use algo mejor que rectas, porque esos perfiles tienen una cierta curvatura. Pienso usar un polinomio de grado 2.
+Para eso tengo que modificar el script de encontrar intersecciones, pero dejar igual el de calibración.
+Tomo como referencia "calibracion_trapecio.m". A todo esto le agrego el sufijo "_curvo".
+Todo lo que hice en la entrada anterior (calibrar sin tirar los bordes), que antes tenía en la carpeta "2021", ahora lo metí en una sub-carpeta "sin_tirar_bordes". Esto que voy a hacer ahora lo meto en otra sub-carpeta de "2021" que llamo "curvo".
+Tengo entonces:
+    calibracion_trapecio_curvo.m (cambia)
+    calculateIntersectionsPath_curvo.m (cambia el ajuste de los perfiles, curvo en lugar de recto)
+primero corro todo sin ninguna modificación, sólo cambiando los nombres.
+
+Primero corrí los scripts originales, y obtengo: 
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.714 mm
+    Error C1: -0.245 mm, Error C2: 0.015 mm
+    Centro global: (88.205, 512.059)
+    Centro C1: (87.987, 512.170)
+    Centro C2: (88.220, 512.447)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.724 mm
+    Error C1: -0.172 mm, Error C2: 0.186 mm
+    Centro global: (88.999, 512.103)
+    Centro C1: (88.747, 512.241)
+    Centro C2: (89.031, 512.584)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.704 mm
+    Error C1: -0.166 mm, Error C2: 0.216 mm
+    Centro global: (88.901, 512.122)
+    Centro C1: (88.649, 512.244)
+    Centro C2: (88.929, 512.610)
+
+Tengo el mismo error de 700 um que vi el 5/2, o sea que el resultado del 5/2 no es confiable. Hay algo que está mal con estos scripts.
+Usando centros coincidentes obtengo:
+
+    34700530
+    Error 2 cámaras: -0.198 mm
+    Error C1: -0.245 mm, Error C2: 0.015 mm
+    Centro global: (87.911, 512.076)
+    Centro C1: (87.987, 512.170)
+    Centro C2: (87.987, 512.170)
+
+    34700630
+    Error 2 cámaras: -0.075 mm
+    Error C1: -0.172 mm, Error C2: 0.186 mm
+    Centro global: (88.634, 512.130)
+    Centro C1: (88.747, 512.241)
+    Centro C2: (88.747, 512.241)
+
+    34700730
+    Error 2 cámaras: -0.040 mm
+    Error C1: -0.166 mm, Error C2: 0.216 mm
+    Centro global: (88.523, 512.139)
+    Centro C1: (88.649, 512.244)
+    Centro C2: (88.649, 512.244)
+
+Dado que usando centros coincidentes da razonable, el problema podría estar en "mido_patron.m"
+
+Tengo 2 calibraciones: con y sin fronteras, y 2 offset, con y sin fronteras tmb
+
+Vuelvo a correr todo usando:
+    calibración y offset sin fronteras
+    "medir_patron"
+Obtengo:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.147 mm
+    Error C1: -0.245 mm, Error C2: -0.005 mm
+    Centro global: (87.960, 512.224)
+    Centro C1: (87.987, 512.170)
+    Centro C2: (87.951, 512.303)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.168 mm
+    Error C1: -0.172 mm, Error C2: 0.186 mm
+    Centro global: (88.757, 512.261)
+    Centro C1: (88.747, 512.241)
+    Centro C2: (88.762, 512.450)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.157 mm
+    Error C1: -0.166 mm, Error C2: 0.204 mm
+    Centro global: (88.661, 512.275)
+    Centro C1: (88.649, 512.244)
+    Centro C2: (88.660, 512.469)
+    
+Ahora lo corro con fronteras. Obtengo:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.706 mm
+    Error C1: -0.212 mm, Error C2: -0.003 mm
+    Centro global: (88.201, 512.063)
+    Centro C1: (87.973, 512.182)
+    Centro C2: (88.215, 512.438)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.716 mm
+    Error C1: -0.177 mm, Error C2: 0.200 mm
+    Centro global: (88.998, 512.108)
+    Centro C1: (88.752, 512.243)
+    Centro C2: (89.031, 512.592)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.699 mm
+    Error C1: -0.180 mm, Error C2: 0.238 mm
+    Centro global: (88.901, 512.126)
+    Centro C1: (88.658, 512.243)
+    Centro C2: (88.931, 512.623)
+    
+Yo antes estaba haciendo una combinación: calibración sin fronteras, y offset con fronteras. Eso explica por qué al medir el patrón haciendo coincidir los centros, el error bajaba dramáticamente.
+CONCLUSIÓN:
+    Lo que nunca hay que usar es offset_fronteras.
+Pero entre calibración con y sin fronteras, quién es mejor?
+Sin fronteras ya lo hice. Con fronteras da:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.139 mm
+    Error C1: -0.212 mm, Error C2: -0.023 mm
+    Centro global: (87.956, 512.228)
+    Centro C1: (87.973, 512.182)
+    Centro C2: (87.946, 512.293)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.160 mm
+    Error C1: -0.177 mm, Error C2: 0.200 mm
+    Centro global: (88.756, 512.266)
+    Centro C1: (88.752, 512.243)
+    Centro C2: (88.762, 512.458)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.152 mm
+    Error C1: -0.180 mm, Error C2: 0.227 mm
+    Centro global: (88.661, 512.279)
+    Centro C1: (88.658, 512.243)
+    Centro C2: (88.663, 512.482)
+    
+En los 3 casos anda mejor usando calibración con fronteras.
+A partir de acá yo probaría de nuevo no tirar los puntos, y luego no usar rectas.
+
+Ahora vuelvo a NO TIRAR LOS PUNTOS.
+
+Calibracion y offset ambos con fronteras: da el resultado del 5/2.
+Calibracion y offset ambos SIN fronteras (OJO QUE ESTO en realidad es tirando puntos):
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.147 mm
+    Error C1: -0.245 mm, Error C2: -0.005 mm
+    Centro global: (87.960, 512.224)
+    Centro C1: (87.987, 512.170)
+    Centro C2: (87.951, 512.303)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.168 mm
+    Error C1: -0.172 mm, Error C2: 0.186 mm
+    Centro global: (88.757, 512.261)
+    Centro C1: (88.747, 512.241)
+    Centro C2: (88.762, 512.450)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.157 mm
+    Error C1: -0.166 mm, Error C2: 0.204 mm
+    Centro global: (88.661, 512.275)
+    Centro C1: (88.649, 512.244)
+    Centro C2: (88.660, 512.469)
+    
+Exactamente igual que no haber tirado los puntos. No puede ser. Lo que pasó es que el 5/2 cuando hice la calibración que no tira puntos, lo hice sólo para la calibración con frontera. La sin frontera ni la toqué, quedó igual (es decir, sí tira los puntos).
+
+Creo la versión "calculateCalibration_2021.m" que calibra, sin tirar puntos, y sin fronteras.
+Para el offset uso el viejo "calculo_offset.m", porque ese no necesito cambiarlo.
+Sin tirar puntos, pero sin usar fronteras en calibracion ni en offset obtengo:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.108 mm
+    Error C1: -0.191 mm, Error C2: 0.096 mm
+    Centro global: (87.946, 512.238)
+    Centro C1: (87.967, 512.189)
+    Centro C2: (87.940, 512.348)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.135 mm
+    Error C1: -0.146 mm, Error C2: 0.239 mm
+    Centro global: (88.743, 512.271)
+    Centro C1: (88.737, 512.251)
+    Centro C2: (88.751, 512.469)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.129 mm
+    Error C1: -0.152 mm, Error C2: 0.234 mm
+    Centro global: (88.648, 512.282)
+    Centro C1: (88.643, 512.249)
+    Centro C2: (88.649, 512.477)
+    
+Sin tirar puntos, usando fronteras en ambas:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.708 mm
+    Error C1: -0.192 mm, Error C2: 0.005 mm
+    Centro global: (88.201, 512.062)
+    Centro C1: (87.966, 512.190)
+    Centro C2: (88.218, 512.441)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.714 mm
+    Error C1: -0.151 mm, Error C2: 0.195 mm
+    Centro global: (88.998, 512.109)
+    Centro C1: (88.742, 512.252)
+    Centro C2: (89.031, 512.590)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.696 mm
+    Error C1: -0.157 mm, Error C2: 0.231 mm
+    Centro global: (88.901, 512.127)
+    Centro C1: (88.649, 512.251)
+    Centro C2: (88.930, 512.618)
+    
+CONCLUSIÓN: no tirar los puntos redujo el error entre 20 y 40 um (la reducción es menor para diámetros más grandes). Sin embargo sigue siendo siempre negativo.
+Por otro lado, estos resultados mejorados tienen un error mayor que el que yo había reportado en la tesis, con lo cual diría que no hicieron una mejora significativa.
+
+Ahora puedo probar de ajustar las esquinas por curvas.
+
+Pruebo una combinación más: offset sin fronteras, pero calibración con:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.123 mm
+    Error C1: -0.192 mm, Error C2: -0.015 mm
+    Centro global: (87.947, 512.230)
+    Centro C1: (87.966, 512.190)
+    Centro C2: (87.940, 512.289)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.139 mm
+    Error C1: -0.151 mm, Error C2: 0.195 mm
+    Centro global: (88.746, 512.270)
+    Centro C1: (88.742, 512.252)
+    Centro C2: (88.754, 512.448)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.131 mm
+    Error C1: -0.157 mm, Error C2: 0.219 mm
+    Centro global: (88.652, 512.283)
+    Centro C1: (88.649, 512.251)
+    Centro C2: (88.653, 512.471)
+
+Da esencialmente igual que usando sin fronteras en todo.
+
+9/2/2021
+========
+Calculo los resultados de base para las 2 calibraciones que faltan (hexágono, corona). Dado que con el trapecio me dieron distinto que lo que tenía anotado en la tesis.
+Creo una carpeta nueva para los resultados: "resultados_base". Pongo cuidado en el tema de las fronteras.
+
+TRAPECIO - RESULTADOS DE BASE
+-----------------------------
+(ie, sin fronteras, pero tirando puntos como hacía originalmente)
+
+    calibracion_trapecio_base.m
+    calculateCalibration_base.m
+    
+Obtengo:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.147 mm
+    Error C1: -0.245 mm, Error C2: -0.005 mm
+    Centro global: (87.960, 512.224)
+    Centro C1: (87.987, 512.170)
+    Centro C2: (87.951, 512.303)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.168 mm
+    Error C1: -0.172 mm, Error C2: 0.186 mm
+    Centro global: (88.757, 512.261)
+    Centro C1: (88.747, 512.241)
+    Centro C2: (88.762, 512.450)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.157 mm
+    Error C1: -0.166 mm, Error C2: 0.204 mm
+    Centro global: (88.661, 512.275)
+    Centro C1: (88.649, 512.244)
+    Centro C2: (88.660, 512.469)
+    
+HEXÁGONO - RESULTADOS DE BASE
+-----------------------------
+Hay 2 códigos para calibrar con hexágono:
+    calibracion_hexagono.m
+    calibracion_hexagono_2.m
+    
+puedo probar cuál anda mejor
+Estos parece que sí usan fronteras.
+En el archivo "home/DIRECTORIO TESIS/tesis.txt" hay registro de que con el trapecio calibré con y sin fronteras (o algo así) y también daba peor con las fronteras, pero en ambos casos andaba mejor de lo que me está andando ahora. Y con fronteras no se iba al carajo. Capaz no le ponía fronteras al offset.
+
+Agrego los scripts:
+    calibracion_hexagono_base.m
+    calibracion_hexagono_2_base.m
+    
+10/2/2021
+=========
+
+Uso calibracion_hexagono_base.m
+-------------------------------
+Me da miedo meterme a recalcular centros, rectas, pendientes, etc. Pero lo voy a tener que hacer para hacer la versión que no tira puntos o que usa curvas en vez de rectas.
+
+Obtengo:
+
+    El �ngulo que ve C1 es 41�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 c�maras: -0.108 mm
+    Error C1: -0.001 mm, Error C2: -0.036 mm
+    Centro global: (180.395, 557.816)
+    Centro C1: (180.335, 557.828)
+    Centro C2: (180.390, 557.857)
+
+    El �ngulo que ve C1 es 45�
+    El �ngulo que ve C2 es 66�
+    34700630
+    Error 2 c�maras: -0.141 mm
+    Error C1: -0.166 mm, Error C2: 0.089 mm
+    Centro global: (181.194, 557.846)
+    Centro C1: (181.189, 557.818)
+    Centro C2: (181.200, 557.968)
+
+    El �ngulo que ve C1 es 46�
+    El �ngulo que ve C2 es 64�
+    34700730
+    Error 2 c�maras: -0.100 mm
+    Error C1: 0.142 mm, Error C2: 0.049 mm
+    Centro global: (181.097, 557.876)
+    Centro C1: (180.983, 557.930)
+    Centro C2: (181.093, 557.958)
+    
+Uso calibracion_hexagono_2_base.m
+---------------------------------
+No veo todavía en qué parte el código empieza a diferir del anterior.
+En este caso no vuelvo a correr el cálculo de los centros porque se ve que es igual que en el script anterior.
+Creo que cambia en la celda siguiente: "calculo las fronteras antes del offset". Así que las celdas anteriores directamente las comento.
+Ojo que hay un gráfico que hace dudar, porque muestra las fronteras sin aplicarles el offset. Pero es simplemente que no hay ningún gráfico de los perfiles con el offset aplicado.
+Obtengo:
+
+    El �ngulo que ve C1 es 41�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 c�maras: -0.085 mm
+    Error C1: -0.001 mm, Error C2: -0.036 mm
+    Centro global: (180.390, 557.830)
+    Centro C1: (180.335, 557.828)
+    Centro C2: (180.383, 557.858)
+
+    El �ngulo que ve C1 es 45�
+    El �ngulo que ve C2 es 66�
+    34700630
+    Error 2 c�maras: -0.122 mm
+    Error C1: -0.166 mm, Error C2: 0.089 mm
+    Centro global: (181.190, 557.857)
+    Centro C1: (181.189, 557.818)
+    Centro C2: (181.192, 557.970)
+
+    El �ngulo que ve C1 es 46�
+    El �ngulo que ve C2 es 64�
+    34700730
+    Error 2 c�maras: -0.082 mm
+    Error C1: 0.142 mm, Error C2: 0.049 mm
+    Centro global: (181.092, 557.887)
+    Centro C1: (180.983, 557.930)
+    Centro C2: (181.085, 557.959)
+    
+CONCLUSIÓN: para el hexágono, la que va es la calibracion_2 (calibracion_hexagono_2_base.m).
+Sigo con la corona.
+
+CORONA - RESULTADOS DE BASE
+---------------------------
+"calibracion_corona_base.m"
+En la calibración de la corona se usa otra calibración para pasar uno de los 2 barridos a mm. Hasta ahora vengo usando el trapecio, pero en esta nueva tanda de resultados al menos el hexágono está andando mejor, así que debería cambiar eso.
+Voy a probar de las 2 formas a ver cuál anda mejor. La opción la pongo en el mismo "calibracion_corona_base.m"
+
+Usando la combinación corona/trapecio:
+    34700530
+    Error 2 c�maras: -0.071 mm
+    Error C1: -0.306 mm, Error C2: 0.094 mm
+    Centro global: (87.615, 512.274)
+    Centro C1: (87.701, 512.189)
+    Centro C2: (87.633, 512.356)
+
+Usando la combinación corona/hexágono:
+    34700530
+    Error 2 c�maras: -0.094 mm
+    Error C1: -0.406 mm, Error C2: 0.054 mm
+    Centro global: (180.054, 557.830)
+    Centro C1: (180.148, 557.702)
+    Centro C2: (180.062, 557.907)
+
+ie, anda mejor con el trapecio. Esto es raro, no será que el error me da más chico por casualidad?
+
+Ahora pruebo de no tirar los puntos, con hexágono y con corona.
+
+TRAPECIO - SIN TIRAR PUNTOS
+---------------------------
+Ya está
+
+HEXÁGONO - SIN TIRAR PUNTOS
+---------------------------
+"calibracion_hexagono_2_2021.m"
+Tengo que dejar igual la detección de intersecciones, pero usar el script de calibración que ya tengo que no tira puntos: "calculateCalibration_2021.m".
+Tengo que correr la parte de calibración, y asegurarme de que no se pise con ninguna otra. Con las que sí tiran puntos no se va a pisar porque están en la carpeta "resultados_base". Por otro lado las calibraciones de trapecio, hexágono y corona no se van a mezclar xq cada una se guarda en la carpeta de "medición" correspondiente.
+Agregué el error de offset en las figuras de offset, porque no estaba. Solamente se imprimía.
+
+Obtengo:
+
+    El �ngulo que ve C1 es 41�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 c�maras: -0.077 mm
+    Error C1: 0.023 mm, Error C2: 0.011 mm
+    Centro global: (180.394, 557.837)
+    Centro C1: (180.326, 557.832)
+    Centro C2: (180.385, 557.886)
+
+    El �ngulo que ve C1 es 45�
+    El �ngulo que ve C2 es 66�
+    34700630
+    Error 2 c�maras: -0.125 mm
+    Error C1: -0.152 mm, Error C2: 0.086 mm
+    Centro global: (181.194, 557.857)
+    Centro C1: (181.181, 557.817)
+    Centro C2: (181.192, 557.971)
+
+    El �ngulo que ve C1 es 46�
+    El �ngulo que ve C2 es 64�
+    34700730
+    Error 2 c�maras: -0.088 mm
+    Error C1: 0.149 mm, Error C2: 0.025 mm
+    Centro global: (181.096, 557.885)
+    Centro C1: (180.978, 557.928)
+    Centro C2: (181.085, 557.950)
+
+No hay grandes diferencias respecto de los resultados de base.
+
+CORONA - SIN TIRAR PUNTOS
+-------------------------
+En "calculateCalibration_corona.m" no filtraba puntos. Dice "no hay NaN que filtrar", lo cual es cierto.
+Notar que de todos modos, después de ese filtrado, hay otro filtrado que se hace con un "ind" que está metido adentro de polyfit4XY. Creo que la función que tiene es descartar por fuera de 3 std, para converger a un ajuste. No es lo mismo que luego tirar aquellos puntos que quedan lejos de ese ajuste (?). Quizás Nicolás quiera eliminar este descarte también, pero no estoy seguro de que siga funcionando el método así.
+Entonces, de los puntos que quiero "dejar de tirar", no tengo que hacer nada, porque ya no los estaba tirando desde el principio (no creo un nuevo calculateCalibration_corona).
+Lo que sí podría hacer alguna diferencia es que al combinar con trapecio o hexágono, esos sí dan diferente al no tirar puntos. Pruebo ambos.
+
+Combinando corona/trapecio obtengo:
+34700530
+    Error 2 c�maras: -0.023 mm
+    Error C1: -0.327 mm, Error C2: 0.216 mm
+    Centro global: (87.599, 512.292)
+    Centro C1: (87.708, 512.182)
+    Centro C2: (87.621, 512.413)
+
+Este resultado está bueno.
+
+Combinando corona/hexágono obtengo:
+    34700530
+    Error 2 c�maras: -0.086 mm
+    Error C1: -0.448 mm, Error C2: 0.110 mm
+    Centro global: (180.059, 557.837)
+    Centro C1: (180.162, 557.681)
+    Centro C2: (180.065, 557.939)
+    
+Esto no está bueno.
+
+Este sería un buen momento para ver si puedo corregir el offset con fronteras. Pero creo que por ahora no es prioritario. En todo caso si Nicolás me lo pide.
+
+VEO SI HAY UN TÉRMINO CUADRÁTICO EN LA DETECCIÓN DE ESQUINAS
+------------------------------------------------------------
+
+
