@@ -601,4 +601,237 @@ Este sería un buen momento para ver si puedo corregir el offset con fronteras. 
 VEO SI HAY UN TÉRMINO CUADRÁTICO EN LA DETECCIÓN DE ESQUINAS
 ------------------------------------------------------------
 
+14/2/2021
+=========
+Empiezo con el trapecio.
+Lo calculé en "calculateIntersectionsPath_curvo", dentro de "calibracion_trapecio_curvo". Guardaba los polinomios lineales y cuadráticos en la estructura S.
+Después hice que guarde 2 C: el original con rectas, y un C_curvo con las intersecciones calculadas con parábolas.
+Ahora le agrego que además todas las otras variables que guarda C_curvo (std, etc) sean obtenidas a partir de las parábolas, para que luego al tirar puntos se tiren a partir de los ajustes de parábolas y no de rectas.
+No me había dado cuenta, pero yo efectivamente estaba guardando todo eso basado en parábolas, y en el C original estaba guardando los valores de parábolas. Ahora lo corrijo. Dejo que el guessNextCorner lo haga a partir de rectas.
+Lo que veo es que el descarte de puntos parece estar tirando justamente aquellos puntos donde tener el término cuadrático hacía una diferencia (los bordes). Quizás esto se vea al combinar ajuste cuadrático+no tirar puntos.
 
+El offset también lo calculo con parábolas (no tengo que hacer nada más)
+Por ahora omito la celda de las fronteras, pero más adelante lo tengo que revisar.
+
+Obtuve:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.130 mm
+    Error C1: -0.229 mm, Error C2: -0.105 mm
+    Centro global: (87.947, 512.218)
+    Centro C1: (87.981, 512.174)
+    Centro C2: (87.939, 512.233)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.171 mm
+    Error C1: -0.156 mm, Error C2: -0.099 mm
+    Centro global: (88.752, 512.247)
+    Centro C1: (88.742, 512.245)
+    Centro C2: (88.751, 512.286)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.174 mm
+    Error C1: -0.150 mm, Error C2: -0.166 mm
+    Centro global: (88.662, 512.255)
+    Centro C1: (88.644, 512.247)
+    Centro C2: (88.650, 512.263)
+    
+Da esencialmente igual a los resultados de base.
+    
+A "mido_patron" le estoy pasando F y FC. Tengo que ver de dónde salen.
+Las fronteras F están generadas en "fronteras_region_valida" (esto no está metido en el main)
+FC viene de fronteraZonaEfectiva, y eso trabaja con intersecciones de rectas.
+Creé "fronteraZonaEfectiva_curvo.m" que carga "intersections_curvo.mat" y guarda "FC_curvo.mat"
+Necesito además "calculo_offset_curvo.m" que guarda "offset_curvo.mat"
+FC lo calculé de nuevo con parábolas, pero F no. Al graficar veo que están bien las fronteras. No hace diferencia si se corren un poquito.
+
+TRAPECIO - CON PARÁBOLAS
+------------------------
+
+Usando "FC_curvo.mat" y "offset_curvo.mat" obtengo:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.138 mm
+    Error C1: -0.229 mm, Error C2: -0.105 mm
+    Centro global: (87.954, 512.220)
+    Centro C1: (87.981, 512.174)
+    Centro C2: (87.943, 512.241)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.180 mm
+    Error C1: -0.156 mm, Error C2: -0.099 mm
+    Centro global: (88.759, 512.249)
+    Centro C1: (88.742, 512.245)
+    Centro C2: (88.755, 512.294)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.184 mm
+    Error C1: -0.150 mm, Error C2: -0.166 mm
+    Centro global: (88.668, 512.257)
+    Centro C1: (88.644, 512.247)
+    Centro C2: (88.654, 512.270)
+
+Solamente cambió el error de las 2 cámaras. El de las cámaras individuales quedó igual, porque cambié el offset. Pero empeoró.
+Por qué habrá empeorado? Si las rectas las sigo teniendo...
+
+Lo voy a repetir para el hexágono y el trapecio, y después lo hago sin tirar puntos.
+
+HEXÁGONO - CON PARÁBOLAS
+------------------------
+Parto de "calibracion_hexagono_2_base.m" y armo "calibracion_hexagono_2_curvo.m"
+Creo "calculateIntersections_hexagono_curvo.m"
+
+Al calcular las intersecciones, aparece un agujero de esquinas no encontradas en la cámara 1 (también pasa usando rectas)
+
+Ahora veo que con el hexágono yo estaba usando un "calculateCalibration_base", mientras que con el trapecio usaba el "calculateCalibration" original. Por ahora me mantengo con "calculateCalibration_base"
+Para calcular el centro del hexágono uso los ajustes por rectas. Creo que no es problema, así que por ahora lo dejo así.
+
+Cuando hace:
+    load([path_offset 'offset_hexagono.mat']);
+    offset=offset_hexagono;
+De dónde sale offset_hexagono? Será que me está faltando calcularlo, con algún script aparte, una vez que tengo "centros" y "pendientes"? (que los calculo en la celda anterior). No tengo idea, así que por ahora lo comento (la celda dice "calculo las fronteras ANTES del offset"). Lo comenté y no pasó nada, o sea que no se usaba.
+
+Efectivamente "offset_hexagono" se calcula después. Le dejo el mismo nombre porque estoy trabajando siempre en la carpeta "curvo".
+
+"fronteras_2" lo acabo de calcular. "FC" se calcula con "fronteraZonaEfectiva", que cambio por "fronteraZonaEfectiva_curvo"
+
+Obtuve:
+
+    El �ngulo que ve C1 es 40�
+    El �ngulo que ve C2 es 66�
+    34700530
+    Error 2 c�maras: -0.117 mm
+    Error C1: -0.018 mm, Error C2: 0.072 mm
+    Centro global: (180.398, 557.813)
+    Centro C1: (180.344, 557.826)
+    Centro C2: (180.387, 557.913)
+
+    El �ngulo que ve C1 es 45�
+    El �ngulo que ve C2 es 58�
+    34700630
+    Error 2 c�maras: -0.135 mm
+    Error C1: -0.109 mm, Error C2: 0.110 mm
+    Centro global: (181.191, 557.851)
+    Centro C1: (181.169, 557.843)
+    Centro C2: (181.187, 557.981)
+
+    El �ngulo que ve C1 es 46�
+    El �ngulo que ve C2 es 56�
+    34700730
+    Error 2 c�maras: -0.118 mm
+    Error C1: 0.181 mm, Error C2: -0.168 mm
+    Centro global: (181.099, 557.870)
+    Centro C1: (180.969, 557.949)
+    Centro C2: (181.084, 557.847)
+
+Da un poco peor que antes.
+
+CORONA/TRAPECIO - CON PARÁBOLAS
+-------------------------------
+Creo "calibracion_corona_curvo" a partir de "calibracion_corona_base".
+El tipo carga "intersecciones.mat". Cuándo se calcula eso?
+Parece que se hace fuera del main, con "calculateIntersectionsCorona_mismo_radio".
+Me hago un "calculateIntersectionsCorona_mismo_radio_curvo".
+Cambio "fitStraightLineCorona" por "fitCurvedLineCorona" (está adentro de "calculateIntersectionsCorona_mismo_radio")
+Veo que en "calculateIntersectionsCorona_mismo_radio" se usa una calibración anterior (uso el trapecio) para determinar las esquinas en mm (obvio). Así que si quiero ser consistente al combinar corona con hexágono, tengo que cambiar eso también.
+
+Actualmente al tratar de ajustar los segmentos por parábolas, en la corona anda muy mal. Por ahora no me quiero meter en este quilombo.
+
+Lo próximo que quiero hacer es medir usando parábolas pero sin tirar puntos.
+
+15/2/2021
+=========
+
+TRAPECIO - CON PARÁBOLAS Y SIN TIRAR PUNTOS
+-------------------------------------------
+
+Creo la carpeta "curvo_sin_tirar". A los scripts les pongo el sufijo "_CST".
+Ahora las intersecciones no necesito calcularlas de nuevo, uso las de "curvo".
+En cambio voy a tener que usar "calculateCalibration_2021" de la carpeta "sin_tirar_bordes". Creo "calculateCalibration_CST", solamente para poder guardar las intersecciones como "calibration_CST.mat", y que no se confunda con otro.
+"fronteraZonaEfectiva_curvo" también sirve de la carpeta "curvo", y no necesito calcularlo de nuevo.
+Cargo el "intersections_curvo.mat" que ya tengo.
+
+Las intersecciones del offset ya las tengo, pero como el offset en sí se calcula con una calibración, lo tengo que volver a calcular. Creo "calculo_offset_CST.m". Lo guarda como "offset_CST.mat"
+
+F y FC los dejo del "curvo"? Yo creo que micrones no hacen diferencia, porque son fronteras.
+
+Obtuve:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.147 mm
+    Error C1: -0.240 mm, Error C2: -0.118 mm
+    Centro global: (87.958, 512.219)
+    Centro C1: (87.986, 512.169)
+    Centro C2: (87.946, 512.237)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.192 mm
+    Error C1: -0.176 mm, Error C2: -0.095 mm
+    Centro global: (88.763, 512.245)
+    Centro C1: (88.750, 512.238)
+    Centro C2: (88.760, 512.298)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.194 mm
+    Error C1: -0.170 mm, Error C2: -0.161 mm
+    Centro global: (88.672, 512.254)
+    Centro C1: (88.651, 512.240)
+    Centro C2: (88.658, 512.275)
+
+Hasta ahora son los peores resultados que obtuve.
+
+HEXÁGONO - CON PARÁBOLAS Y SIN TIRAR PUNTOS
+-------------------------------------------
+
+Creo "calibracion_hexagono_2_CST.m"
+Como con el trapecio, no vuelvo a calcular las intersecciones. Cargo "intersections_curvo.mat".
+Después uso "calculateCalibration_CST.m"
+
+Obtuve:
+
+    El �ngulo que ve C1 es 41�
+    El �ngulo que ve C2 es 66�
+    34700530
+    Error 2 c�maras: -0.101 mm
+    Error C1: 0.107 mm, Error C2: 0.095 mm
+    Centro global: (180.399, 557.824)
+    Centro C1: (180.296, 557.864)
+    Centro C2: (180.384, 557.928)
+
+    El �ngulo que ve C1 es 45�
+    El �ngulo que ve C2 es 58�
+    34700630
+    Error 2 c�maras: -0.145 mm
+    Error C1: -0.027 mm, Error C2: 0.130 mm
+    Centro global: (181.197, 557.848)
+    Centro C1: (181.133, 557.861)
+    Centro C2: (181.188, 557.993)
+
+    El �ngulo que ve C1 es 46�
+    El �ngulo que ve C2 es 56�
+    34700730
+    Error 2 c�maras: -0.133 mm
+    Error C1: 0.252 mm, Error C2: -0.160 mm
+    Centro global: (181.106, 557.864)
+    Centro C1: (180.936, 557.963)
+    Centro C2: (181.085, 557.854)
+
+En general empeoró respecto de no tirar, pero usar rectas.
