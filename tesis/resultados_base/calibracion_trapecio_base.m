@@ -56,7 +56,7 @@ calculateCalibration_base(C, path_calibracion);
 % ahora a partir de los datos tengo que calcular el offset. 
 offset = calculo_offset(path_offset, path_calibracion);
 
-%% Esta celda la salteo porque sólo empeoró los resultados
+%% Esta es la celda que me dio problemas, pero luego la corregí
 
 % antes de calibrar tengo que quedarme sólo con las regiones de interés.
 % Las fronteras están generadas en "fronteras_region_valida_base_con_fronteras"
