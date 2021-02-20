@@ -1,6 +1,12 @@
 clear variables
-path_1 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
-path_2 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
+
+% para calibrar la corona "de base"
+% path_1 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+% path_2 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
+
+% para calibrar la corona "sin tirar puntos"
+path_1 = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
+path_2 = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion45_2021/';
 
 esquinas_pixels={[],[]}; % px_promedio, py_promedio
 t = [9,9]; % con radio 1 ambos t son 9
@@ -74,21 +80,49 @@ save(fullfile(path_2, 'esquinas_pixels'),'esquinas_pixels');
 %% convierto una de las 2 C a mm
 
 clear variables
-path_mm = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
-path_px = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
 
+% para calibrar la corona "de base"
+% path_mm = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+% path_px = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
+
+% para calibrar la corona "sin tirar puntos"
+path_mm = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
+path_px = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion45_2021/';
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % acá elijo si uso la calibración del trapecio o del hexágono
-% además, al final de esta celda elijo el nombre del "intersections.mat"
-% para distinguir cuál usé
+% además, AL FINAL de esta celda elijo el nombre del "intersections.mat"
+% para distinguir cuál usé.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% trapecio:
+%%%%%%%%%%%%%
+% trapecio: %
+%%%%%%%%%%%%%
+
+% para calibrar la corona "de base"
 % path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion42_base/';
 % path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion43_base/';
 % load([path_offset 'offset.mat']);
 
-% hexágono:
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
-path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
+% para calibrar la corona "sin tirar puntos"
+% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion42_2021/';
+% path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion43_2021/';
+% load([path_offset 'offset.mat']);
+
+%%%%%%%%%%%%%
+% hexágono: %
+%%%%%%%%%%%%%
+
+% para calibrar la corona "de base"
+% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
+% path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
+% load([path_offset 'offset_hexagono.mat']);
+% offset = offset_hexagono;
+% clear offset_hexagono;
+
+% % para calibrar la corona "sin tirar puntos"
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion47_2021/';
+path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion47_2021/';
 load([path_offset 'offset_hexagono.mat']);
 offset = offset_hexagono;
 clear offset_hexagono;
@@ -164,7 +198,12 @@ save(fullfile(path_mm, 'intersections_corona_hexagono'),'C');
 %%
 
 clear variables
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+
+% para calibrar la corona "de base"
+% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+
+% para calibrar la corona "sin tirar puntos"
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
 
 % acá nuevamente elijo si combino con trapecio o con hexágono.
 % uso 2 funciones distintas para calcular la calibración, para poder
@@ -190,8 +229,13 @@ fronteraZonaEfectiva_corona(path_calibracion);
 
 clear variables, clc
 
-path_datos = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion48_base/';
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+% para calibrar la corona "de base"
+% path_datos = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion48_base/';
+% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+
+% para calibrar la corona "sin tirar puntos"
+path_datos = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion48_2021/';
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
 
 load([path_calibracion 'calibration.mat']);
 % load([path_calibracion 'fronteras.mat']);
