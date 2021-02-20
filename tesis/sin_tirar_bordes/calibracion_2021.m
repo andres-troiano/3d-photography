@@ -9,21 +9,21 @@ clear variables
 %datos nuevos
 path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion42_2021/';
 path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion43_2021/';
-% 
-% % datos viejos
-% % path_calibracion = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion27\';
-% % path_offset = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion29\';
-% 
-% %%
-% 
-% % clasifico los datos, eliminando aquellas capturas en las que no se vio
-% % nada
-% creo_directorios_2_camaras(path_calibracion);
-% separar_frames_utiles(path_calibracion, 1);
-% separar_frames_utiles(path_calibracion, 2);
-% % ac� estar�a bueno eliminar los archivos originales, para no tenerlos
-% % duplicados
-% convertFiles2DotMatPath(path_calibracion);
+
+% datos viejos
+% path_calibracion = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion27\';
+% path_offset = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion29\';
+
+%%
+
+% clasifico los datos, eliminando aquellas capturas en las que no se vio
+% nada
+creo_directorios_2_camaras(path_calibracion);
+separar_frames_utiles(path_calibracion, 1);
+separar_frames_utiles(path_calibracion, 2);
+% ac� estar�a bueno eliminar los archivos originales, para no tenerlos
+% duplicados
+convertFiles2DotMatPath(path_calibracion);
 
 %%
 
@@ -64,10 +64,10 @@ calculateCalibration_2021(C, path_calibracion);
 % ahora a partir de los datos tengo que calcular el offset. 
 offset = calculo_offset(path_offset, path_calibracion);
 
-%%
+%% esta es la celda que hay que corregir
 
 % antes de calibrar tengo que quedarme s�lo con las regiones de inter�s.
-% Las fronteras est�n generadas en "fronteras_region_valida"
+% Las fronteras est�n generadas en "fronteras_region_valida_2021_con_fronteras"
 
 clear variables
 
@@ -76,8 +76,9 @@ path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion43_20
 
 load([path_calibracion 'intersections.mat']);
 load([path_offset 'offset.mat']);
-load([path_calibracion 'fronteras.mat']);
-load([path_calibracion 'ind_fronteras.mat']);
+% esto cambia:
+load([path_calibracion 'fronteras_con_fronteras.mat']);
+load([path_calibracion 'ind_fronteras_con_fronteras.mat']);
 
 close all, figure, hold on, grid on
 for q = 1:2
@@ -132,7 +133,10 @@ calculateCalibration_con_fronteras_2021(C,path_calibracion, ind_fronteras)
 % o no. De ser as�, para la c�mara 2 definir�a la zona v�lida cpath_calibracionpath_calibracionomo la que
 % tengo definida hasta ac� menos el offset que tengo hasta ac�, porque en
 % el script de abajo todav�a los datos no est�n desplazados
-offset_fronteras = calculo_offset_con_fronteras_2021(path_offset, path_calibracion);
+
+% uso el base porque sirve, así no tengo branches de más
+% offset_fronteras = calculo_offset_con_fronteras_2021(path_offset, path_calibracion);
+offset_fronteras = calculo_offset_con_fronteras_base(path_offset, path_calibracion, F);
 
 %% ahora mido los patrones
 
@@ -150,19 +154,18 @@ path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion43_20
 % path_calibracion = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion32\';
 % path_offset = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion43\'; % no pertenece a la medición
 
-% load([path_offset 'camara_1.mat']);
-
 % calibracion y offset sin fronteras
 % load([path_calibracion 'calibration.mat']);
-load([path_offset 'offset.mat']);
+% load([path_offset 'offset.mat']);
+% load([path_fronteras 'fronteras.mat']);
 
-% calibracion y offset con fronteras
-load([path_calibracion 'calibration_con_fronteras_2021.mat']);
-% load([path_offset 'offset_fronteras.mat']);
-% offset = offset_fronteras;
+% calibración y offset CON fronteras
+load([path_calibracion 'calibration_con_fronteras.mat']);
+load([path_offset 'offset_fronteras.mat']);
+load([path_fronteras 'fronteras_con_fronteras.mat']);
+offset = offset_fronteras;
+clear offset_fronteras;
 
-% load([path_calibracion 'fronteras.mat']);
-load([path_fronteras 'fronteras.mat']);
 load([path_calibracion 'FC.mat']);
 
 % empaqueto lo que ya tengo hecho en el fronteras_region_valida. Ahí mido
