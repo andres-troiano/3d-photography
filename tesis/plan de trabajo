@@ -1,0 +1,21 @@
+hacer coincidir los centros es hacer trampa? Necesito otra calibración?
+Medir haciendo coincidir los centros. Creo que esto reduciría el error del offset al mínimo, pero todavía no sé si eso produce resultados satisfactorios.
+Si al hacer coincidir los centros el resultado no es satisfactorio, quiere decir que el problema no está en el offset, sino en las calidades individuales de cada cámara.
+volver a medir los errores de todo
+
+estudiar el error de taubin en función de la inclinación del láser
+pensar eso cómo se podría medir
+pensar qué otra hipótesis no se cumple
+osela streamline
+    para saber el ancho del plano láser necesito saber el modelo exacto
+coherent stingray
+    el ancho no está en el folleto
+otra cosa que recomiendo a futuro es medir muchas veces cada patrón (preguntar mejor cuál es el propósito)
+Me llama la atención que con las cámaras individuales, a veces el error es positivo. Se vio tanto con la cámara 1 como con la 2. Pero al combinarlas siempre da negativo.
+Sabiendo por cuánto mide mal, no se le puede restar y chau? O hacer una nueva lookup table?
+El tema de las fronteras yo creo que tiene que estar mal hecho, porque en el pasado daba algo razonable
+    si corrijo esto, podría solucionar mi problema
+Cuando el error de las 2 cámaras es mayor que el de las cámaras individuales, quiere decir que el problema está en el cálculo del offset. Sin embargo no hay consistencia en esto.
+si quiero ser consistente al combinar corona con hexágono, tengo que usar el hexágono también al calcular el "barrido en mm".
+Trapecio: el barrido de calibración no cubre plenamente las regiones de interés. El de offset todavía menos. En la cámara 1 cubre menos de la mitad.
+Para la incerteza al medir con la corona, hay que tener en cuenta que si bien no tiene incerteza de offset, sí entra la incerteza de la otra calibración (ya sea trapecio o hexágono). Hay que ver de qué manera propagarlo.
