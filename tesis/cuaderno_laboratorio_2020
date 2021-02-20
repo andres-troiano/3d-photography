@@ -835,3 +835,113 @@ Obtuve:
     Centro C2: (181.085, 557.854)
 
 En general empeoró respecto de no tirar, pero usar rectas.
+
+16/2/2021
+=========
+
+Trato de corregir la celda "mala" de "calibracion_resultados_base.m". La que calibra dentro de fronteras, que produce un error de 700 um.
+Primero se cargan "fronteras.mat" e "ind_fronteras.mat". De eso por ahora uso los que ya están, porque no deberían tener impacto significativo en el resultado. Si los quisiera calcular de nuevo, eso se hace en "fronteras_region_valida.m"
+Después de eso, lo que resta revisar es: "calculateCalibration_con_fronteras.m" y "calculo_offset_con_fronteras.m". Presumiblemente esté fallando el 2do, xq los 700 aparecían al usar ese offset. Reviso "calculo_offset_con_fronteras.m"
+Este código es exactamente el mismo que "calculo_offset.m". La única diferencia es que usa una calibración calculada dentro de las fronteras, mientras que el original no.
+Quiero comparar los dos cálculos de offset. Extranamente, el original no guardaba los gráficos del offset en función de X,Y, así que se lo agrego. Para eso creo la carpeta "figuras_offset".
+Espero que entre los 2 offset haya una diferencia de aprox 500 um.
+
+Con fronteras me dio:
+    Offset en X = (51.247 +- 0.401) mm
+    Offset en Y = (30.571 +- 0.194) mm
+
+Sin fronteras:
+    Offset en X = (51.516 +- 0.033) mm
+    Offset en Y = (30.705 +- 0.027) mm
+
+1) Con fronteras, el offset tiene un error zarpado que solapa todo, pero sin fronteras no.
+2) Todavía hay que corregir el 700
+
+Si yo busco el problema en el pegado de las cámaras (ie, calcular el offset de manera "perfecta"), una forma posible de acotar esa calidad es haciendo coincidir los centros. Eso lo habíamos descartado (creo que era porque se veía feo el error), pero valdría la pena repasar esos resultados a ver si el error se solapa.
+
+3) Por qué el error del offset con fronteras es tan grande?
+Los errores de la calibración con fronteras son los típicos: entre 5 y 70 um.
+
+Para mí la calibración dentro de las fronteras tiene que ser mejor. Por qué propaga un error tan grande al offset? Yo creo que el offset está siendo calculado en regiones que no fueron calibradas.
+De hecho en el código no aparecen por ningún lado las fronteras. Solamente se usa la calibración hecha dentro de las fronteras.
+Sin embargo se ve que los puntos del offset con y sin fronteras están desplazados aprox. 50 mm entre sí! Lo cual no debería pasar. La única diferencia entre ellos es la calibración, pero ambas calibraciones deberían estar referidas al mismo origen.
+
+Al margen de esto, en el caso de que yo pueda mejorar el cálculo del offset con fronteras, eso nunca va a ser mejor que hacer coincidir los centros.
+Si bien no es fácil decir porque hay pocos datos, en general suele andar mejor el hexágono que el trapecio, lo cual indica que el método para determinar el offset es mejor. Habría que ver cómo se comparan entre sí haciendo coincidir los centros.
+Por otro lado en general suele andar mejor la corona que el hexágono, y eso es consistente con el hecho de que la corona no requiere calcular un offset.
+
+19/2/2021
+=========
+
+En la "celda mala", en la parte del gráfico, los puntos de la zona común no coinciden.
+    El paso es de 5 mm
+    Para que coincidan, los offset X e Y deberían ser múltiplos de 5 mm. En cambio son (51.516, 30.705)
+    Sin embargo el offset que tengo que aplicar es la distancia entre una esquina y otra del trapecio. Eso no es múltiplo de 5 mm
+    Los punts azules y rojos no son esquinas distintas, así que no tienen que coincidir.
+El offset de los puntos se carga en el momento, pero F ya lo tiene, eso no está bueno, porque podría ser distinto.
+
+Quiero corregir el cálculo de offset con fronteras, de manera que calcule el offset sólo dentro de las fronteras, porque yo creo que eso es o que da el error de 700 um.
+Creo un branch llamado "calculo_offset_con_fronteras_base". Lo que guardo es "offset_fronteras_base", y las figuras las guardo en una carpeta llamada "figuras_offset_fronteras_base".
+
+Las fronteras "F", ya tienen el offset aplicado?
+    no debería ser posible, porque el offset aún no fue calculado
+    Sin embargo al graficarlas juntas se ve que componen un cilindro, con lo cual están donde deben estar.
+    Creo que F ya está ubicado donde debe estar por construcción. Porque parto del centro del cilindro
+Para una de las 2 cámaras, los puntos y la frontera deberían estar alineados. Esto no se ve. Pero en este caso estoy usando la calibración "sin fronteras" para la frontera, y la calibración "con fronteras" para los puntos con los que voy a calcular el offset. Y vi (aunque no entendí por qué) que los puntos usando una y otra calibración tienen un cierto corrimiento.
+La solución es hacer un branch "fronteras_region_valida_base_con_fronteras" (esto es enloquecedor).
+    Los resultados los guardo como "fronteras_con_fronteras.mat", "ind_fronteras_con_fronteras.mat"
+    
+Siguen desalineados.
+
+Miro un "gráfico bueno" (al que le confío)
+Las fronteras son las mismas que en el otro gráfico me quedan desalineadas.
+Sin embargo los puntos, en el gráfico bueno son del barrido de calibración, mientras que en el gráfico malo son del barrido de offset.
+Por qué el barrido de offset estaría desalineado?
+Cómo son esos 2 barridos comparados?
+Llegado el caso, si no pudiera confiarle al barrido de offset, tengo la posiblidad de zafar haciendo coincidir los centros.
+Hay 1 diferencia fundamental entre los 2 barridos, y es que en el 2do se mira una única esquina.
+
+Los grafico juntos a ver si entiendo qué pasa. "comparacion_2_barridos_trapecio.m"
+
+Al ver juntos los 2 barridos, veo que el barrido de offset estuvo mal hecho en el sentido de que no pude barrer todo el espacio. Me quedó una zona bastante grande que en el barrido de calibración sí la pude cubrir, pero en el barrido de offset no.
+Por lo demás, los 2 barridos están alineados entre sí.
+Para comparar con las fronteras, en los 2 barridos a la cámara 2 hay que aplicarle el offset.
+Lo que se ve es que, el barrido de calibración ya de por sí no alcanza a cubrir plenamente la zona buscada. ESTO SE PUEDE SENALAR.
+Por otro lado, el barrido de offset es tan limitado que la región de la cámara 2 la cubre razonablemente, pero a la cámara 1 la cubre menos de la mitad. SENALAR ESTO TAMBIÉN.
+
+Esto no lo puedo cambiar. Dentro de estas limitaciones, yo quiero calcular el offset sólo dentro de las zonas calibradas. Ahora ya sé que tengo que desplazar la cámara 2. Pero como en el cálculo de offset justamente todavía no tengo el offset, una cosa que puedo hacer es "des-correr" la frontera de la cámara 2, usando los valores del offset "común", para de esa manera tirar los puntos que escapan a la frontera, y con los que quedan, calcular el offset "con fronteras".
+
+Dadas las limitaciones del barrido de offset que comentaba antes, los puntos comunes que sirven para calcular el offset son muy poquitos.
+El offset que obtengo de esta manera es:
+    Offset en X = (51.490 +- 0.074) mm
+    Offset en Y = (30.692 +- 0.044) mm
+    
+Al medir "con fronteras" BIEN HECHO obtuve:
+
+    El �ngulo que ve C1 es 54�
+    El �ngulo que ve C2 es 70�
+    34700530
+    Error 2 cámaras: -0.193 mm
+    Error C1: -0.212 mm, Error C2: -0.023 mm
+    Centro global: (87.979, 512.212)
+    Centro C1: (87.973, 512.182)
+    Centro C2: (87.971, 512.306)
+
+    El �ngulo que ve C1 es 56�
+    El �ngulo que ve C2 es 68�
+    34700630
+    Error 2 cámaras: -0.212 mm
+    Error C1: -0.177 mm, Error C2: 0.200 mm
+    Centro global: (88.779, 512.252)
+    Centro C1: (88.752, 512.243)
+    Centro C2: (88.787, 512.471)
+
+    El �ngulo que ve C1 es 57�
+    El �ngulo que ve C2 es 65�
+    34700730
+    Error 2 cámaras: -0.204 mm
+    Error C1: -0.180 mm, Error C2: 0.227 mm
+    Centro global: (88.684, 512.264)
+    Centro C1: (88.658, 512.243)
+    Centro C2: (88.688, 512.495)
+
