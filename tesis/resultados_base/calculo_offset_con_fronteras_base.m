@@ -113,7 +113,10 @@ function [offset_fronteras] = calculo_offset_con_fronteras_base(path_datos, path
     fprintf('Offset en X = %.3f\nOffset en Y = %1.3f\n', offset_fronteras(1), offset_fronteras(2));
 
     % exporto para futuro uso
-    save(fullfile(path_datos, 'offset_fronteras_base'),'offset_fronteras');
+    % le pongo un nombre general, porque esta función sirve para otros
+    % casos, no sólo el base
+%     save(fullfile(path_datos, 'offset_fronteras_base'),'offset_fronteras');
+    save(fullfile(path_datos, 'offset_fronteras'),'offset_fronteras');
     
     % grafico el offset en funci�n de x,y
     close all
@@ -131,7 +134,8 @@ function [offset_fronteras] = calculo_offset_con_fronteras_base(path_datos, path
     view(15,30)
     tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset_fronteras(1), offset_fronteras(3)]);
     title(tit)
-    saveas(f1, [path_datos 'figuras_offset_fronteras_base/offset_en_x.png'])
+%     saveas(f1, [path_datos 'figuras_offset_fronteras_base/offset_en_x.png'])
+    saveas(f1, [path_datos 'figuras_offset_con_fronteras/offset_en_x.png'])
     
     f2=figure; hold on, grid on
     plot3(esquinas{1}(ind1,1), esquinas{1}(ind1,2), error(:,2), '.b')
@@ -145,5 +149,6 @@ function [offset_fronteras] = calculo_offset_con_fronteras_base(path_datos, path
     view(21,26)
     tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset_fronteras(2), offset_fronteras(4)]);
     title(tit)
-    saveas(f2, [path_datos 'figuras_offset_fronteras_base/offset_en_y.png'])
+%     saveas(f2, [path_datos 'figuras_offset_fronteras_base/offset_en_y.png'])
+    saveas(f2, [path_datos 'figuras_offset_con_fronteras/offset_en_y.png'])
 end
