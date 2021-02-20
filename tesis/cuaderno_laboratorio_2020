@@ -945,3 +945,29 @@ Al medir "con fronteras" BIEN HECHO obtuve:
     Centro C1: (88.658, 512.243)
     Centro C2: (88.688, 512.495)
 
+20/2/2021
+=========
+Cuando uso la corona, quiero tener discriminados los resultados según si la usé en combinación con el trapecio o el hexágono.
+Modifico "calibracion_corona_base.m" para que en lugar de guardar "intersections.mat", guarde "intersections_corona_trapecio.mat" o "intersections_corona_hexagono.mat".
+Me encuentro con que "calibracion_corona_base.m" está trabajando sobre la carpeta "2021" (ie, sin tirar puntos) lo cual está mal. Esto es así porque al calibrar con la corona "sin tirar" lo único que hay que hacer es correr la calibración de base usando las calibraciones de hexágono y trapecio "sin tirar" (porque con la corona nunca se tiran puntos).
+Lo corrijo desde el ppio. Recuerdo que con la corona, las intersecciones se calculan en un script que está aparte, y eso no lo estoy haciendo de nuevo.
+También creo "calculateCalibration_corona_base_trapecio.m" y "calculateCalibration_corona_base_hexagono.m" para poder guardar las 2 calibraciones y sus figuras con nombres distintos. Las calibraciones las llamo "calibration_corona_base_trapecio.mat" y "calibration_corona_base_hexagono.mat".
+Para guardar las figuras creo las carpetas "figuras_calibracion_corona_trapecio" y "figuras_calibracion_corona_hexagono".
+
+Ahora calculo las incertezas que me faltan del sheet "Sin tirar puntos"
+-----------------------------------------------------------------------
+Empiezo por la calibración "trapecio con frontera". Para eso tengo que "corregir la celda mala" de "calibracion_2021.m"
+Lo único que cambia respecto de base es la calibración usada. Todo lo demás es igual.
+Tengo que crear un "fronteras_region_valida_2021_con_fronteras"
+Para el cálculo del offset quizás sería mejor reutilizar "calculo_offset_con_fronteras_base", dado que lo único que cambia son los directorios. Pero en los outputs tiene puesto "_base", lo cual no era necesario y confundiría. Así que le voy a sacar esos "_base" para reutilizarlo y no tener varios branches de lo mismo.
+Sin embargo yo ya tenía un "calculo_offset_con_fronteras_2021". Simplemente no lo voy a usar más, pero no lo voy a eliminar.
+
+Ahora hago que las incertezas de calibración de la corona se guarden por separado según haya usado trapecio o hexágono.
+Dado que en la corona nunca tiraba puntos, acá lo único que hay que hacer es correr la calibración de la corona de base con las calibraciones "sin tirar" del trapecio y hexágono.
+Uso "calibracion_corona_base" y ahora lo aclaro en el script porque más temprano pensé que me había equivocado.
+
+Calculo la incerteza de offset del trapecio sin fronteras "curvo" y "CST"
+-------------------------------------------------------------------------
+Porque no había guardado las figuras. Para eso modifico "calculo_offset_curvo.m", y "calculo_offset_CST.m"
+
+Tengo para corregir las mediciones hechas con "trapecio con fronteras" en los casos "no base", pero por ahora no me importa. Porque en el caso que sí anduvo (base) dio esencialmente lo mismo.
