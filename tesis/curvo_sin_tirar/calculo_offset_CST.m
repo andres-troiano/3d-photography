@@ -83,10 +83,33 @@ function [offset] = calculo_offset_CST(path_datos, path_calibracion)
     error = error(ind1, :);
 
     % calculo el offset como el promedio de los errores
-    offset = [mean(error(:, 1)), mean(error(:, 2))];
+%     offset = [mean(error(:, 1)), mean(error(:, 2))];
+    offset = [mean(error(:, 1)), mean(error(:, 2)), std(error(:, 1)), std(error(:, 2))];
     fprintf('Offset en X = %.3f\nOffset en Y = %1.3f\n', offset(1), offset(2));
 
     % exporto para futuro uso
     save(fullfile(path_datos, 'offset_CST'),'offset');
+    
+    % grafico el offset en funci�n de x,y
+    close all
+    f1=figure; hold on, grid on
+    plot3(esquinas{1}(ind1,1), esquinas{1}(ind1,2), error(:,1), '.b')
+    xlabel('X (mm)')
+    ylabel('Y (mm)')
+    zlabel('Offset en X (mm)')
+    view(15,30)
+    tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset(1), offset(3)]);
+    title(tit)
+    saveas(f1, [path_datos 'figuras_offset/offset_en_x.png'])
+    
+    f2=figure; hold on, grid on
+    plot3(esquinas{1}(ind1,1), esquinas{1}(ind1,2), error(:,2), '.b')
+    xlabel('X (mm)')
+    ylabel('Y (mm)')
+    zlabel('Offset en Y (mm)')
+    view(21,26)
+    tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset(2), offset(4)]);
+    title(tit)
+    saveas(f2, [path_datos 'figuras_offset/offset_en_y.png'])
     
 end
