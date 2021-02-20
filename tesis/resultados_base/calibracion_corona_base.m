@@ -1,6 +1,6 @@
 clear variables
-path_1 = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
-path_2 = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion45_2021/';
+path_1 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+path_2 = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
 
 esquinas_pixels={[],[]}; % px_promedio, py_promedio
 t = [9,9]; % con radio 1 ambos t son 9
@@ -74,20 +74,24 @@ save(fullfile(path_2, 'esquinas_pixels'),'esquinas_pixels');
 %% convierto una de las 2 C a mm
 
 clear variables
-path_mm = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
-path_px = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion45_2021/';
+path_mm = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
+path_px = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion45_base/';
 
 % acá elijo si uso la calibración del trapecio o del hexágono
+% además, al final de esta celda elijo el nombre del "intersections.mat"
+% para distinguir cuál usé
+
 % trapecio:
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion42_2021/';
-path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion43_2021/';
-load([path_offset 'offset.mat']);
+% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion42_base/';
+% path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion43_base/';
+% load([path_offset 'offset.mat']);
 
 % hexágono:
-% path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion47_2021/';
-% path_offset = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion47_2021/';
-% load([path_offset 'offset_hexagono.mat']);
-% offset = offset_hexagono;
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
+path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion47_base/';
+load([path_offset 'offset_hexagono.mat']);
+offset = offset_hexagono;
+clear offset_hexagono;
 
 load([path_mm 'esquinas_pixels.mat']);
 intersections_mm=esquinas_pixels;
@@ -151,26 +155,43 @@ for q = 1:2
     axis equal
 end
 
-save(fullfile(path_mm, 'intersections'),'C');
+% usando el trapecio
+% save(fullfile(path_mm, 'intersections_corona_trapecio'),'C');
+
+% usando el hexágono
+save(fullfile(path_mm, 'intersections_corona_hexagono'),'C');
 
 %%
 
 clear variables
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
 
-load([path_calibracion 'intersections.mat']);
-calculateCalibration_corona(C, path_calibracion);
+% acá nuevamente elijo si combino con trapecio o con hexágono.
+% uso 2 funciones distintas para calcular la calibración, para poder
+% guardarlas con nombres distintos.
+
+% trapecio
+% load([path_calibracion 'intersections_corona_trapecio.mat']);
+% calculateCalibration_corona_base_trapecio(C, path_calibracion);
+
+% hexágono
+load([path_calibracion 'intersections_corona_hexagono.mat']);
+calculateCalibration_corona_base_hexagono(C, path_calibracion);
 
 %% genero FC
 
+% creo que esto no cambia significativamente según si uso trapecio o
+% hexágono, porque la referencia es distinta
+
+% también necesito 2, para que carguen cada uno una calibración diferente
 fronteraZonaEfectiva_corona(path_calibracion);
 
 %% mido los cilindros
 
 clear variables, clc
 
-path_datos = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion48_2021/';
-path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/sin_tirar_bordes/medicion44_2021/';
+path_datos = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion48_base/';
+path_calibracion = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion44_base/';
 
 load([path_calibracion 'calibration.mat']);
 % load([path_calibracion 'fronteras.mat']);
