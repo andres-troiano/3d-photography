@@ -59,7 +59,7 @@ offset = calculo_offset(path_offset, path_calibracion);
 %% Esta celda la salteo porque sólo empeoró los resultados
 
 % antes de calibrar tengo que quedarme sólo con las regiones de interés.
-% Las fronteras están generadas en "fronteras_region_valida"
+% Las fronteras están generadas en "fronteras_region_valida_base_con_fronteras"
 
 clear variables
 
@@ -68,8 +68,10 @@ path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion43_bas
 
 load([path_calibracion 'intersections.mat']);
 load([path_offset 'offset.mat']);
-load([path_calibracion 'fronteras.mat']);
-load([path_calibracion 'ind_fronteras.mat']);
+% load([path_calibracion 'fronteras.mat']);
+% load([path_calibracion 'ind_fronteras.mat']);
+load([path_calibracion 'fronteras_con_fronteras.mat']);
+load([path_calibracion 'ind_fronteras_con_fronteras.mat']);
 
 close all, figure, hold on, grid on
 for q = 1:2
@@ -97,13 +99,13 @@ for q = 1:2
     if q == 1
 %         plot(grilla_mmx,grilla_mmy,'.b')
 %         plot(grilla_mmx(ind),grilla_mmy(ind),'.c')
-        plot(grilla_mmx(ind_fronteras{q}),grilla_mmy(ind_fronteras{q}),'.c')
+        plot(grilla_mmx(ind_fronteras{q}),grilla_mmy(ind_fronteras{q}),'+b')
     end
     
     if q == 2
 %         plot(grilla_mmx,grilla_mmy,'.r')
 %         plot(grilla_mmx(ind),grilla_mmy(ind),'.m')
-        plot(grilla_mmx(ind_fronteras{q}),grilla_mmy(ind_fronteras{q}),'.m')
+        plot(grilla_mmx(ind_fronteras{q}),grilla_mmy(ind_fronteras{q}),'or')
     end
     
     plot(F{q}(:,1), F{q}(:,2), '--')
@@ -124,7 +126,7 @@ calculateCalibration_con_fronteras(C,path_calibracion, ind_fronteras)
 % o no. De ser así, para la cámara 2 definiría la zona válida como la que
 % tengo definida hasta acá menos el offset que tengo hasta acá, porque en
 % el script de abajo todavía los datos no están desplazados
-offset_fronteras = calculo_offset_con_fronteras(path_offset, path_calibracion);
+offset_fronteras = calculo_offset_con_fronteras_base(path_offset, path_calibracion, F);
 
 %% ahora mido los patrones
 
@@ -142,11 +144,18 @@ path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion43_bas
 % path_calibracion = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion32\';
 % path_offset = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion43\'; % no pertenece a la medición
 
-load([path_calibracion 'calibration.mat']);
-load([path_offset 'offset.mat']);
+% forma "tradicional" (calibración y offset sin fronteras)
+% load([path_calibracion 'calibration.mat']);
+% load([path_offset 'offset.mat']);
+% load([path_fronteras 'fronteras.mat']);
 
-% load([path_calibracion 'fronteras.mat']);
-load([path_fronteras 'fronteras.mat']);
+% calibración y offset CON fronteras
+load([path_calibracion 'calibration_con_fronteras.mat']);
+load([path_offset 'offset_fronteras_base.mat']);
+load([path_fronteras 'fronteras_con_fronteras.mat']);
+offset = offset_fronteras;
+clear offset_fronteras;
+
 load([path_calibracion 'FC.mat']);
 
 % empaqueto lo que ya tengo hecho en el fronteras_region_valida. Ahí mido
