@@ -145,16 +145,16 @@ path_offset = '/home/andres/DIRECTORIO TESIS/2021/resultados_base/medicion43_bas
 % path_offset = 'C:\Users\Norma\Downloads\datos_calibraciones\medicion43\'; % no pertenece a la medición
 
 % forma "tradicional" (calibración y offset sin fronteras)
-% load([path_calibracion 'calibration.mat']);
-% load([path_offset 'offset.mat']);
-% load([path_fronteras 'fronteras.mat']);
+load([path_calibracion 'calibration.mat']);
+load([path_offset 'offset.mat']);
+load([path_fronteras 'fronteras.mat']);
 
 % calibración y offset CON fronteras
-load([path_calibracion 'calibration_con_fronteras.mat']);
-load([path_offset 'offset_fronteras_base.mat']);
-load([path_fronteras 'fronteras_con_fronteras.mat']);
-offset = offset_fronteras;
-clear offset_fronteras;
+% load([path_calibracion 'calibration_con_fronteras.mat']);
+% load([path_offset 'offset_fronteras_base.mat']);
+% load([path_fronteras 'fronteras_con_fronteras.mat']);
+% offset = offset_fronteras;
+% clear offset_fronteras;
 
 load([path_calibracion 'FC.mat']);
 
@@ -167,13 +167,37 @@ nominales = [139.707, 168.310, 177.805];
 
 frames_cilindro = {[], []};
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% haciendo coincidir los centros (sin usar el offset) %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% dado que no voy a usar el offset, entonces no voy a desplazar los
+% datos. Pero F viene desplazada de fábrica (FC no). Entonces para que
+% los datos no me queden afuera de las fronteras, tengo que
+% "anti-desplazar" F.
+
+% si no voy a hacer coincidir los centros, comentar esta línea, y
+% seleccionar adentro del loop en f.
+F = {[F{1}(:,1), F{1}(:,2)], [F{2}(:,1) + offset(1), F{2}(:,2) + offset(2)]};
+
+close all
 for f = 1:3
-    close all
+%     close all
     for q = 1:2
         frames_cilindro{q} = [path_datos frame_cilindro{f} '_camara_' num2str(q) '.png'];
     end
-    [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron(frames_cilindro, id_cilindro{f}, px2mmPol, offset, F, FC, [path_datos 'medicion/']); % con las fronteras en el offset
-%     [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron_centros_coincidentes(frames_cilindro, id_cilindro{f}, px2mmPol, offset_fronteras, F, FC, path_datos); % haciendo coincidir los 2 centros
+    
+    % acá elijo si hago coincidir los centros o no.
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % sin hacer coincidir los centros (usando el offset) %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron(frames_cilindro, id_cilindro{f}, px2mmPol, offset, F, FC, [path_datos 'medicion/']); % con las fronteras en el offset
+    
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    % haciendo coincidir los centros (sin usar el offset) %
+    %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido_patron_centros_coincidentes_base(frames_cilindro, id_cilindro{f}, px2mmPol, F, FC, path_datos); % haciendo coincidir los 2 centros
+
     fprintf([id_cilindro{f} '\nError 2 cámaras: %.3f mm\nError C1: %.3f mm, Error C2: %.3f mm\nCentro global: (%.3f, %.3f)\nCentro C1: (%.3f, %.3f)\nCentro C2: (%.3f, %.3f)\n\n'], 2*r_teorico - nominales(f), 2*r_individual(1) - nominales(f), 2*r_individual(2) - nominales(f), centro_x, centro_y, centro_individual{1}(1), centro_individual{1}(2), centro_individual{2}(1), centro_individual{2}(2))
 end
 
