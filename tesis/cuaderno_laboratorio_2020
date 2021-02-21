@@ -971,3 +971,24 @@ Calculo la incerteza de offset del trapecio sin fronteras "curvo" y "CST"
 Porque no había guardado las figuras. Para eso modifico "calculo_offset_curvo.m", y "calculo_offset_CST.m"
 
 Tengo para corregir las mediciones hechas con "trapecio con fronteras" en los casos "no base", pero por ahora no me importa. Porque en el caso que sí anduvo (base) dio esencialmente lo mismo.
+
+21/2/2021
+=========
+La incerteza de offset con el hexágono la estoy guardando en "offset_hexagono.mat". Pero voy a modificar "calibracion_hexagono_2_base.m" para que ponga esa información en las figuras, y las guarde en una carpeta "figuras_offset".
+
+Me doy cuenta que antes había modificado "calculo_offset.m" (para hacer esto mismo), el cual no está en la carpeta "2021", sino que lo estoy tomando de "MATLAB - apolinario", carpeta que no está en GH, así que la backupeo ahora.
+
+Lo repetí para los "no base".
+
+Mido los patrones haciendo coincidir los centros
+------------------------------------------------
+
+TRAPECIO SIN FRONTERAS - BASE
+-----------------------------
+Veo que "mido_patron_centros_coincidentes.m" usa el offset. Yo no quiero eso. Ya que voy a hacer coincidir los centros, quiero prescindir completamente del offset. Así que creo una variante "mido_patron_centros_coincidentes_base.m"
+También modifiqué "calibracion_trapecio_base.m"
+Tengo alguna frontera corrida, pero no me doy cuenta cómo corregirlo. Para verlas hago el script "comparacion_fronteras_trapecio_base.m"
+Las figuras de la medición haciendo coincidir los centros se guardan en la carpeta "centros_coincidentes", dentro de "medicion48".
+
+Esto no está bien, porque tengo que definir un offset para la calibración, mientras que ahora le estoy aplicando un offset distinto a cada medición. Tengo que calcular el offset para cada uno de los 3 patrones y promediarlos o elegir uno.
+Esto también lo podría tratar como un problema de minimización.
