@@ -429,9 +429,9 @@ xlabel('X (mm)')
 ylabel('Y (mm)')
 zlabel('Error en offset X (mm)')
 view(28,26)
-tit = sprintf('Std del offset en X: %.3f mm', offset_hexagono(3));
+tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset_hexagono(1), offset_hexagono(3)]);
 title(tit)
-saveas(f1, [path_calibracion 'graficos_centros/offset_en_X.png'])
+saveas(f1, [path_calibracion 'figuras_offset/offset_en_X.png'])
 
 f2=figure; hold on, grid on
 plot3(error(ind,1), error(ind,2), error(ind,4) + offset_hexagono(2),'.')
@@ -439,9 +439,9 @@ xlabel('X (mm)')
 ylabel('Y (mm)')
 zlabel('Error en offset Y (mm)')
 view(30,24)
-tit = sprintf('Std del offset en Y: %.3f mm', offset_hexagono(4));
+tit = sprintf('Mean = %.3f mm, Std = %.3f mm', [offset_hexagono(2), offset_hexagono(4)]);
 title(tit)
-saveas(f2, [path_calibracion 'graficos_centros/offset_en_Y.png'])
+saveas(f2, [path_calibracion 'figuras_offset/offset_en_Y.png'])
 
 fprintf('Std del offset en X: %.3f mm\nStd del offset en Y: %.3f mm\n', offset_hexagono(3), offset_hexagono(4))
 
