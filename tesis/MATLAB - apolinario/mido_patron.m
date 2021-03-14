@@ -13,6 +13,14 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
     XY = {[], []};
     r_individual = nan(2,1);
     centro_individual = {nan(2,1), nan(2,1)};
+    
+    % acá guardo los segmentos que uso para cada cámara para calcular los
+    % span angulares. Una cámara en cada celda, X e Y uno en cada columna.
+    % Son 2 segmentos por cámara.
+    % Cada segmento tiene 2 puntos, pero hay 1 que es común a los 2
+    % segmentos.
+    segmentos_2_camaras = {nan(4,2), nan(4,2)};
+    
     for q = 1:2
 
         I=imread(frames_cilindro{q});
@@ -94,6 +102,9 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
         P2 = [XY{q}(end,1), XY{q}(end,2)];
         angulo = calculo_angulo(P1, P0, P2, P0);
         fprintf('El �ngulo que ve C%d es %.0f�\n', q, angulo)
+        
+        % guardo los segmentos para calcular el span angular total
+        segmentos_2_camaras{q} = [P1; P0; P2; P0];
 
     end
     
@@ -139,5 +150,48 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
     ylabel('Error radial (mm)')
     title('2 c�maras combinadas')
     saveas(h3, [path_plot id_cilindro '_error_camaras_combinadas.png'])
+    
+    % grafico los 8 puntos a ver cuáles son los segmentos extremos
+%     figure, hold on, grid on
+%     plot(segmentos_2_camaras{1}(1:2,1), segmentos_2_camaras{1}(1:2,2), '-b')
+%     plot(segmentos_2_camaras{1}(3:4,1), segmentos_2_camaras{1}(3:4,2), '--b')
+%     plot(segmentos_2_camaras{2}(1:2,1), segmentos_2_camaras{2}(1:2,2), '-r')
+%     plot(segmentos_2_camaras{2}(3:4,1), segmentos_2_camaras{2}(3:4,2), '--r')
+%     axis equal
+    
+    % calculo span angular total
+    % defino nuevos Pi
+%     x1 = 0; %segmentos_2_camaras{1}(3,1);
+%     x2 = 1; %segmentos_2_camaras{1}(4,1);
+%     x3 = 0; %segmentos_2_camaras{1}(1,1);
+%     x4 = 0; %segmentos_2_camaras{1}(2,1);
+%     
+%     y1 = 0; %segmentos_2_camaras{1}(3,2);
+%     y2 = 0; %segmentos_2_camaras{1}(4,2);
+%     y3 = 0; %segmentos_2_camaras{1}(1,2);
+%     y4 = 1; %segmentos_2_camaras{1}(2,2);
+    
+    
+    x1 = segmentos_2_camaras{1}(3,1);
+    x2 = segmentos_2_camaras{1}(4,1);
+    x3 = segmentos_2_camaras{2}(1,1);
+    x4 = segmentos_2_camaras{2}(2,1);
+    
+    y1 = segmentos_2_camaras{1}(3,2);
+    y2 = segmentos_2_camaras{1}(4,2);
+    y3 = segmentos_2_camaras{2}(1,2);
+    y4 = segmentos_2_camaras{2}(2,2);
+    
+%     figure, hold on, grid on
+%     plot([x1, x2], [y1, y2], '--b')
+%     plot([x3, x4], [y3, y4], '-r')
+%     axis equal
+    
+    v1=[x2,y2]-[x1,y1];
+    v2=[x4,y4]-[x3,y3];
+    span_total=acos(sum(v1.*v2)/(norm(v1)*norm(v2)));
+    
+    % convierto de radianes a grados
+    fprintf('El span angular total es %f\n', span_total*57.296)
     
 end
