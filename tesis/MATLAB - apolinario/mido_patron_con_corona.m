@@ -2,7 +2,7 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
 
     % id_cilindro es un str tipo '34700530'
     % frames_cilindro es un cell de 2 casilleros que tiene en cada uno el
-    % directorio del frame de cada cámara
+    % directorio del frame de cada cï¿½mara
     
     mc = {'ob', '.r'}; % markers para los cilindros
     mf = {'--b', '--r'}; % markers para las fronteras
@@ -36,7 +36,7 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
         x = polyval4XY(px2mmPol{q}(1), px, py);
         y = polyval4XY(px2mmPol{q}(2), px, py);
         
-        % convierto a mm las fronteras dadas por la calibración
+        % convierto a mm las fronteras dadas por la calibraciï¿½n
         temp_x = polyval4XY(px2mmPol{q}(1), FC{q}(:,1), FC{q}(:,2));
         temp_y = polyval4XY(px2mmPol{q}(2), FC{q}(:,1), FC{q}(:,2));
         FC{q} = [temp_x, temp_y];
@@ -53,7 +53,7 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
 %         ind = true(numel(x),1);
         
 % 
-        % guardo los datos en una celda que junta las 2 cámaras
+        % guardo los datos en una celda que junta las 2 cï¿½maras
         xy = [x(ind), y(ind)];
         XY{q} = xy;
         
@@ -63,7 +63,7 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
 %         plot(F{q}(:,1), F{q}(:,2), mf{q})
         plot(FC{q}(:,1), FC{q}(:,2), mfc{q})
         
-        % martín quiere ver cuánto mide el radio calculado con cada cámara
+        % martï¿½n quiere ver cuï¿½nto mide el radio calculado con cada cï¿½mara
         % por separado
         circulo = TaubinNTN(xy);
         centro_x = circulo(1);
@@ -76,9 +76,19 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
         plot(xy(:,1), error, '.')
         xlabel('X (mm)')
         ylabel('Error radial (mm)')
-        title(['Cámara ' num2str(q)])
+        title(['Cï¿½mara ' num2str(q)])
         saveas(h2, [path_plot id_cilindro '_error_C' num2str(q) '.png'])
         close(2)
+        
+        % calculo el ï¿½ngulo que ven las cï¿½maras
+        P0 = [centro_x, centro_y];
+        P1 = [XY{q}(1,1), XY{q}(1,2)];
+        P2 = [XY{q}(end,1), XY{q}(end,2)];
+        angulo = calculo_angulo(P1, P0, P2, P0);
+        fprintf('El ï¿½ngulo que ve C%d es %.0fï¿½\n', q, angulo)
+        
+        % guardo los segmentos para calcular el span angular total
+        segmentos_2_camaras{q} = [P1; P0; P2; P0];
 
     end
 
@@ -86,7 +96,7 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
 %     XY = [XY{1}, XY{2}];
     XY = [XY{1}; XY{2}];
 
-    % veo qué tan circular es, y mido el diámetro
+    % veo quï¿½ tan circular es, y mido el diï¿½metro
     circulo = TaubinNTN(XY);
 
     centro_x = circulo(1);
@@ -115,7 +125,24 @@ function [centro_x, centro_y, r_teorico, r_individual, centro_individual] = mido
     plot(XY(:,1), error, '.')
     xlabel('X (mm)')
     ylabel('Error radial (mm)')
-    title('2 cámaras combinadas')
+    title('2 cï¿½maras combinadas')
     saveas(h3, [path_plot id_cilindro '_error_camaras_combinadas.png'])
+    
+    x1 = segmentos_2_camaras{1}(3,1);
+    x2 = segmentos_2_camaras{1}(4,1);
+    x3 = segmentos_2_camaras{2}(1,1);
+    x4 = segmentos_2_camaras{2}(2,1);
+    
+    y1 = segmentos_2_camaras{1}(3,2);
+    y2 = segmentos_2_camaras{1}(4,2);
+    y3 = segmentos_2_camaras{2}(1,2);
+    y4 = segmentos_2_camaras{2}(2,2);
+    
+    v1=[x2,y2]-[x1,y1];
+    v2=[x4,y4]-[x3,y3];
+    span_total=acos(sum(v1.*v2)/(norm(v1)*norm(v2)));
+    
+    % convierto de radianes a grados
+    fprintf('El span angular total es %f\n', span_total*57.296)
     
 end
