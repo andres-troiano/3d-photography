@@ -30,4 +30,8 @@ The cameras and lasers were mounted arranged in two arms with a relative inclina
 
 <img src="images/vista_general.jpg" width="400">
 
-## 3. Calibration with trapezoidal pattern
+## 3. Calibration using trapezoidal standard
+
+As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a determined reference object fixed to the positioners, whose position is precisely known. Then a map is modeled that links the coordinate systems of the cameras with that of the positioners, with which it will be possible to determine the position in space of the target from the signal on the camera sensors. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
+
+<img src="images/trapecio_con_camaras_2.png" width="400">
