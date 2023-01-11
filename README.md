@@ -28,6 +28,6 @@ In order to assemble a system like the one seen above, two lasers were used: an 
 
 The cameras and lasers were mounted arranged in two arms with a relative inclination of 60°, with a camera-laser angle of 45°. The figure below shows a general view of the complete assembly.
 
-<img src="images/vista_general.png" width="400">
+<img src="images/vista_general.jpg" width="400">
 
 ## 3. Calibration with trapezoidal pattern
