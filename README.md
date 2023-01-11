@@ -35,3 +35,19 @@ The cameras and lasers were mounted arranged in two arms with a relative inclina
 As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a determined reference object fixed to the positioners, whose position is precisely known. Then a map is modeled that links the coordinate systems of the cameras with that of the positioners, with which it will be possible to determine the position in space of the target from the signal on the camera sensors. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
 
 <img src="images/trapecio_con_camaras_2.png" width="400">
+
+### 3.1 Algorithm for finding corners
+
+The purpose of this algorithm is to identify the 2 lines that make up the visible corner in the sensor (if there are any) and find their intersection. The steps of the algorithm are as follows:
+
+1. First, a profile is identified in the central region of the scan.
+2. Then all the profiles are ordered in order of proximity with respect to that first profile.
+3. In the first profile, the user manually points out by clicking the approximate position of the corner to be found (see figure below).
+
+<img src="images/eleccion_esquina.png" width="400">
+
+4. Starting from the coordinates ($x_0$, $y_0$) given by the user, the algorithm divides the profile in two, to the left and to the right of $x_0$. Take a range of 40 pixels on either side of $x_0$ and fit each of the two regions by lines. It then performs an iteration in which it discards those points that are more than 3 standard deviations away from the fit, and refits with the remaining points. In this way, it finds the lines that best fit the two faces of the corner, and determines its coordinates from the intersection of these two lines.
+    
+5. Once the corner of the first profile is found, the algorithm continues with the next closest to the first. In this case it is no longer necessary for the user to provide an initial estimate of the position of the corner. Instead the algorithm takes a cutout of the first profile, made up of an environment of the corner, and compares the new profile with the corner already found until it identifies the region of the new profile that most resembles the previous corner. For this, the new profile and the previous corner are plotted superimposed, starting from the left end of the new profile (see figure below).
+
+<img src="images/guess_next_corner/correlacion_paso_1.png" width="400">
