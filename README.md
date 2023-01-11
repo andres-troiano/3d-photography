@@ -47,7 +47,12 @@ The purpose of this algorithm is to identify the 2 lines that make up the visibl
 <img src="images/eleccion_esquina.png" width="400">
 
 4. Starting from the coordinates ($x_0$, $y_0$) given by the user, the algorithm divides the profile in two, to the left and to the right of $x_0$. Take a range of 40 pixels on either side of $x_0$ and fit each of the two regions by lines. It then performs an iteration in which it discards those points that are more than 3 standard deviations away from the fit, and refits with the remaining points. In this way, it finds the lines that best fit the two faces of the corner, and determines its coordinates from the intersection of these two lines.
-    
 5. Once the corner of the first profile is found, the algorithm continues with the next closest to the first. In this case it is no longer necessary for the user to provide an initial estimate of the position of the corner. Instead the algorithm takes a cutout of the first profile, made up of an environment of the corner, and compares the new profile with the corner already found until it identifies the region of the new profile that most resembles the previous corner. For this, the new profile and the previous corner are plotted superimposed, starting from the left end of the new profile (see figure below).
 
 <img src="images/guess_next_corner/correlacion_paso_1.png" width="400">
+
+A scan is made in which the previous corner is moved to the right, and at each point the difference between both profiles is calculated, as shown in figure \ref{fig_gnc2}. The goal is to have a measure of how similar the two profiles are at each step of the scan. To do this, in each step all the points of the difference are added, that is, all the $y$ coordinates of the figure \ref{fig_gnc2}. The figure \ref{fig_gnc3} shows the result, where it can be seen that in the first 500 pixels, as well as in the last ones, the difference between the new profile and the previous corner is constant, because the new profile has a value constant in those regions. However, this curve has a minimum, where the previous corner overlapped with the corner of the new profile (see figure \ref{fig_gnc4}).
+
+<img src="images/guess_next_corner/diferencia_paso_1.png" width="400">
+<img src="images/guess_next_corner/perfil_Q.png" width="400">
+<img src="images/guess_next_corner/correlacion_final.png" width="400">
