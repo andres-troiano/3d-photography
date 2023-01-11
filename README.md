@@ -1,20 +1,29 @@
 # 3D profilometry using laser triangulation
 
-## Abstract
+0. [Abstract](#sec_0)<br>
+1. [Introduction](#sec_1)<br>
+    1.1 [Triangulation methods](#sec_11)<br>
+    1.2 [Quality control for tubular products](#sec_12)<br>
+2. [Experimental setup](#sec_2)<br>
+3. [Calibration using trapezoidal standard](#sec_3)<br>
+    3.1 [Algorithm for finding corners](#sec_31)<br>
+    3.2 [Calibration algorithm](#sec_32)<br>
+
+## Abstract <a class="anchor" id="sec_0"></a>
 
 A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal pattern, a hexagonal pattern, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs.
 
-## 1. Introduction
+## 1. Introduction <a class="anchor" id="sec_1"></a>
 
 Three-dimensional scanning technologies play a vital role in a wide variety of industries and disciplines, including factory process control, the healthcare sector, civil engineering, forensics and archaeology. The primary purpose is to create images or 3D models of an object for various purposes, such as reverse engineering, quality testing, or reconstruction of historical artifacts.
 
-### 1.1 Triangulation methods
+### 1.1 Triangulation methods <a class="anchor" id="sec_11"></a>
 
 Of the various existing 3D scanning methods, the most widely used are those in which the target is illuminated with a laser or a fringe pattern. Laser methods fall into 3 categories: triangulation, time of flight , and phase shift. In triangulation methods, a narrow band of light projected onto a three-dimensional surface produces a line of illumination that will look distorted from any perspective other than the projector (see figure below). Analysis of the shape of these linear images can then be used to make an accurate geometric reconstruction of the object's surface. There are four main components of a 3D triangulation system: the camera, the linear projector which is typically a laser, a mechanism that moves the object or laser-camera pair through the system's field of view, and the software to process the image. accurately capture and convert distances between pixels into height differences
 
 <img src="images/triangulacion.png" width="400">
 
-### 1.2 Quality control for tubular products
+### 1.2 Quality control for tubular products <a class="anchor" id="sec_12"></a>
 
 At the Tenaris research center, 3D profilometry equipment was developed to measure defects on the surface of tubular steel products. These tubes have diameters in the range of 5.5'' to 9 5/8'' (140 to 244 mm). International quality standards require that surface defects do not exceed 5% of the tube wall thickness, which ranges from 4.5 mm to 12 mm depending on the product. The defects to be resolved have dimensions ranging from 300 μm to 600 μm. For the present work, an equipment was developed, based on laser triangulations. There are precedents on commercial equipment of this kind by companies such  as IMS ans SMS.
 
@@ -22,7 +31,7 @@ For this purpose, a reduced system consisting of 2 arms instead of 6 was assembl
 
 <img src="images/2_brazos.png" width="400">
 
-## 2. Experimental setup
+## 2. Experimental setup <a class="anchor" id="sec_2"></a>
 
 In order to assemble a system like the one seen above, two lasers were used: an Osela Streamline and a Coherent StingRay, both 660 nm, with a fan angle of 20° and focused at 390 mm. The width of the laser line was approximately 200 µm. Automation Technology C2-2040 high-speed cameras were used, with a resolution of 2048 x 1088 pixels, which were operated at a speed of 333 fps. Spacecom Pyxis 12 lenses and Midopt BP660 bandpass filters with a useful range of 640-680 nm were used together with the cameras.
 
@@ -30,13 +39,13 @@ The cameras and lasers were mounted arranged in two arms with a relative inclina
 
 <img src="images/vista_general.jpg" width="400">
 
-## 3. Calibration using trapezoidal standard
+## 3. Calibration using trapezoidal standard <a class="anchor" id="sec_3"></a>
 
 As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a determined reference object fixed to the positioners, whose position is precisely known. Then a map is modeled that links the coordinate systems of the cameras with that of the positioners, with which it will be possible to determine the position in space of the target from the signal on the camera sensors. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
 
 <img src="images/trapecio_con_camaras_2.png" width="400">
 
-### 3.1 Algorithm for finding corners
+### 3.1 Algorithm for finding corners <a class="anchor" id="sec_31"></a>
 
 The purpose of this algorithm is to identify the 2 lines that make up the visible corner in the sensor (if there are any) and find their intersection. The steps of the algorithm are as follows:
 
@@ -77,3 +86,5 @@ Once all the profiles have been processed, the figure below is obtained, which s
 The figure below shows the coordinates in pixels of the intersections as a function of $x$ and $y$. After finding all available intersections with each camera, each was calibrated individually as described in the next section.
 
 <img src="images/pxVsMm.png" width="400">
+
+### 3.2 Calibration algorithm <a class="anchor" id="sec_32"></a>
