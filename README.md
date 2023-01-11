@@ -68,3 +68,12 @@ However, this curve has a minimum, where the previous corner overlapped with the
 
 <img src="images/guess_next_corner/ajuste_mas_de_10.png" width="400">
 
+8. The algorithm continues in this way until the profiles are exhausted.
+
+Once all the profiles have been processed, the figure below is obtained, which shows the $x$ and $y$ coordinates of the positioners for which it was possible to find an intersection with one or the other camera.
+
+<img src="images/intersecciones.png" width="400">
+
+The figure below shows the coordinates in pixels of the intersections as a function of $x$ and $y$. After finding all available intersections with each camera, each was calibrated individually as described in the next section.
+
+<img src="images/pxVsMm.png" width="400">
