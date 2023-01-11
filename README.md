@@ -62,3 +62,9 @@ The goal is to have a measure of how similar the two profiles are at each step o
 However, this curve has a minimum, where the previous corner overlapped with the corner of the new profile (see figure below).
 
 <img src="images/guess_next_corner/correlacion_final.png" width="400">
+
+6. At coordinate $x$ of said minimum, the process described in step 4 is repeated to find the corner of the new profile.
+7. The algorithm continues finding the corners of the remaining profiles, in order of closeness to the first, until it has 10 corners. Once that point is reached, the algorithm implements a faster method to obtain the first estimate of the corner. This method no longer consists in comparing with a reference corner, but in taking the 10 corners already found and plotting the $x$ coordinate of the corner (in pixels) based on the $x, y$ coordinates in millimeters of the corresponding profile. That is, the coordinates of the linear locators in which that profile was measured. This is shown in figure below in red dots. These points are fitted by a polynomial of degree 2, as shown in the same figure. The algorithm then takes the $x,y$ coordinates of the next profile (in millimeters) and uses them to evaluate the polynomial. In this way it obtains an estimate of the position of the corner in the new profile (blue dot in the figure below). Then proceed as in step 4 to find the coordinates accurately.
+
+<img src="images/guess_next_corner/ajuste_mas_de_10.png" width="400">
+
