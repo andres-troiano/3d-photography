@@ -21,3 +21,4 @@ At the Tenaris research center, 3D profilometry equipment was developed to measu
 For this purpose, a reduced system consisting of 2 arms instead of 6 was assembled, in order to capture the essential characteristics of the problem, such as the inclination between the arms and the distance to the center of the system. The figure below shows an assembly diagram.
 
 <img src="images/2_brazos.png" width="400">
+
