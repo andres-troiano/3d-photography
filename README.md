@@ -51,8 +51,14 @@ The purpose of this algorithm is to identify the 2 lines that make up the visibl
 
 <img src="images/guess_next_corner/correlacion_paso_1.png" width="400">
 
-A scan is made in which the previous corner is moved to the right, and at each point the difference between both profiles is calculated, as shown in figure \ref{fig_gnc2}. The goal is to have a measure of how similar the two profiles are at each step of the scan. To do this, in each step all the points of the difference are added, that is, all the $y$ coordinates of the figure \ref{fig_gnc2}. The figure \ref{fig_gnc3} shows the result, where it can be seen that in the first 500 pixels, as well as in the last ones, the difference between the new profile and the previous corner is constant, because the new profile has a value constant in those regions. However, this curve has a minimum, where the previous corner overlapped with the corner of the new profile (see figure \ref{fig_gnc4}).
+A scan is made in which the previous corner is moved to the right, and at each point the difference between both profiles is calculated, as shown in figure below.
 
 <img src="images/guess_next_corner/diferencia_paso_1.png" width="400">
+
+The goal is to have a measure of how similar the two profiles are at each step of the scan. To do this, in each step all the points of the difference are added, that is, all the $y$ coordinates of the figure above. Figure below shows the result, where it can be seen that in the first 500 pixels, as well as in the last ones, the difference between the new profile and the previous corner is constant, because the new profile has a value constant in those regions.
+
 <img src="images/guess_next_corner/perfil_Q.png" width="400">
+
+However, this curve has a minimum, where the previous corner overlapped with the corner of the new profile (see figure below).
+
 <img src="images/guess_next_corner/correlacion_final.png" width="400">
