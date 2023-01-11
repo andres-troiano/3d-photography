@@ -22,3 +22,10 @@ For this purpose, a reduced system consisting of 2 arms instead of 6 was assembl
 
 <img src="images/2_brazos.png" width="400">
 
+## Experimental setup
+
+In order to assemble a system like the one seen above, two lasers were used: an Osela Streamline and a Coherent StingRay, both 660 nm, with a fan angle of 20° and focused at 390 mm. The width of the laser line was approximately 200 µm. Automation Technology C2-2040 high-speed cameras were used, with a resolution of 2048 x 1088 pixels, which were operated at a speed of 333 fps. Spacecom Pyxis 12 lenses and Midopt BP660 bandpass filters with a useful range of 640-680 nm were used together with the cameras.
+
+The cameras and lasers were mounted arranged in two arms with a relative inclination of 60°, with a camera-laser angle of 45°. The figure below shows a general view of the complete assembly.
+
+<img src="images/vista_general.png" width="400">
