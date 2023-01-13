@@ -95,3 +95,16 @@ To give the polynomial fits a better quality, some points considered less reliab
 
 <img src="images/descarte_c1.png" width="400">
 <img src="images/descarte_c2.png" width="400">
+
+The adjustment of the polynomials was carried out iteratively to rule out points whose error with respect to the model exceeded 3 standard deviations. The two figures below show the points used for adjustments.
+
+<img src="images/puntos_usados_c1.png" width="400">
+<img src="images/puntos_usados_c2.png" width="400">
+
+The two figures below show the difference between the measured coordinates of three-dimensional space and those predicted by the model, given by the inverted polynomials, on the sensors.
+
+<img src="images/error_pol_invertidos_c1.png" width="400">
+<img src="images/error_pol_invertidos_c2.png" width="400">
+
+### 3.3 Diameter measurement
+
