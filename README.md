@@ -29,7 +29,7 @@ Of the various existing 3D scanning methods, the most widely used are those in w
 
 ### 1.2 Quality control for tubular products <a class="anchor" id="sec_12"></a>
 
-At the Tenaris research center, 3D profilometry equipment was developed to measure defects on the surface of tubular steel products. These tubes have diameters in the range of 5.5'' to 9 5/8'' (140 to 244 mm). International quality standards require that surface defects do not exceed 5% of the tube wall thickness, which ranges from 4.5 mm to 12 mm depending on the product. The defects to be resolved have dimensions ranging from 300 μm to 600 μm. For the present work, an equipment was developed, based on laser triangulations. There are precedents on commercial equipment of this kind by companies such  as IMS ans SMS.
+At the [Tenaris research center](https://www.tenaris.com/en/sustainability/innovation/), 3D profilometry equipment was developed to measure defects on the surface of tubular steel products. These tubes have diameters in the range of 5.5'' to 9 5/8'' (140 to 244 mm). International quality standards require that surface defects do not exceed 5% of the tube wall thickness, which ranges from 4.5 mm to 12 mm depending on the product. The defects to be resolved have dimensions ranging from 300 μm to 600 μm. For the present work, an equipment was developed, based on laser triangulations. There are precedents on commercial equipment of this kind by companies such  as IMS ans SMS.
 
 For this purpose, a reduced system consisting of 2 arms instead of 6 was assembled, in order to capture the essential characteristics of the problem, such as the inclination between the arms and the distance to the center of the system. The figure below shows an assembly diagram.
 
