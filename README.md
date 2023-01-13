@@ -88,3 +88,10 @@ The figure below shows the coordinates in pixels of the intersections as a funct
 <img src="images/pxVsMm.png" width="400">
 
 ### 3.2 Calibration algorithm <a class="anchor" id="sec_32"></a>
+
+With the coordinates of each point in the two reference systems (pixels and millimeters), the system is calibrated looking for a model that adjusts the transformation that leads from one space to another. The figure above shows the graphs of this transformation, where it can be seen that the functions are smooth. For this reason it was thought that low degree polynomials could give a satisfactory fit. First, order 2 polynomials were tested, but it was observed that the residuals had an appreciable structure, which is an indicator that the fit was not good enough. The degree was then increased until no structure was observed in the residues, with which the appropriate polynomials turned out to be of order 4.
+
+To give the polynomial fits a better quality, some points considered less reliable were omitted: those in which the linear adjustment of one of the 2 straight lines had a standard deviation greater than 0.4, or when one of the 2 straight lines presented less than 0.4, were discarded. out of 100 points. The two figures below show the points discarded with this criterion.
+
+<img src="images/descarte_c1.png" width="400">
+<img src="images/descarte_c2.png" width="400">
