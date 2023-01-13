@@ -8,6 +8,10 @@
 3. [Calibration using trapezoidal standard](#sec_3)<br>
     3.1 [Algorithm for finding corners](#sec_31)<br>
     3.2 [Calibration algorithm](#sec_32)<br>
+    3.3 [Mutual referencing of cameras](#sec_33)<br>
+    3.4 [Diameter measurement](#sec_34)<br>
+    3.5 [Quantifying the error introduced by Taubin's algorithm](#sec_35)<br>
+4. [Conclusions](#sec_32)<br>
 
 ## Abstract <a class="anchor" id="sec_0"></a>
 
@@ -106,9 +110,7 @@ The two figures below show the difference between the measured coordinates of th
 <img src="images/error_pol_invertidos_c1.png" width="400">
 <img src="images/error_pol_invertidos_c2.png" width="400">
 
-### 3.3 Diameter measurement
-
-#### Mutual referencing of cameras
+### 3.3 Mutual referencing of cameras <a class="anchor" id="sec_33"></a>
 
 Once the two cameras are calibrated, it is already possible to measure dimensions with either of them. However, the measurements of one and the other will differ from each other by one translation. This is so because each camera was calibrated taking a different corner of the trapezoid as reference. Then the measurements of both cameras will differ in a translation equal to the one that leads from one corner to another of the trapezoid. To solve this problem, it is necessary to determine the magnitude of this translation, and compensate it by moving the calibration of one of the two cameras. To determine the magnitude of the translation, we sought to measure the same corner with both cameras, and calculate the difference between both measurements. This was done as follows:
 
@@ -127,7 +129,7 @@ Once the two cameras are calibrated, it is already possible to measure dimension
 
 5. The average value of the two distributions shown in the figure above is calculated, and it is used to apply a translation to the polynomials corresponding to one of the cameras. In this way, both are referenced to a common origin.
 
-#### Diameter measurement
+### 3.4 Diameter measurement <a class="anchor" id="sec_34"></a>
 
 Once the two calibrations were referenced to a common origin, the data from both cameras was combined and fitted by a circle. For this, an algebraic algorithm developed by Brown University's mathematician [Gabriel Taubin](https://engineering.brown.edu/people/gabriel-taubin) was used. The figure below shows the data measured by the cameras (in blue and red), together with the circle that best fits them (black dotted line).
 
@@ -145,7 +147,7 @@ The table below shows the difference between the measured and real diameter of e
 | 168.310       | -172          | 186           | -168             |
 | 177.805       | -166          | 204           | -157             |
 
-#### Quantifying the error introduced by Taubin's algorithm
+### 3.5 Quantifying the error introduced by Taubin's algorithm <a class="anchor" id="sec_35"></a>
 
 Since the method of measuring the diameter of cylindrical patterns requires the use of the Taubin algorithm, it was studied how the quality of the fit is affected by the available angular aperture. For this, an ideal circle of 178 mm in diameter was taken and a normal error was added to the components $x$ and $y$, thus modeling the experimental error. This distribution was centered at 0, but its standard deviation was equal to 100 µm. The figure below shows a semicircle generated in this way.
 
@@ -161,6 +163,6 @@ The standard deviation of this distribution was taken as a measure of the error 
 
 As can be seen, for profiles of more than 50° the error is less than 3 μm, while below 20° it increases above 16 μm. This allows us to conclude that the fit of the circle using Taubin's algorithm does not introduce a significant error.
 
-## 4. Conclusions
+## 4. Conclusions <a class="anchor" id="sec_4"></a>
 
 A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal pattern, a hexagonal pattern, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. Although all the measurements made had the precision sought, the determination of the uncertainty of the system for future measurements remains pending, which could not be done within the terms of this work.
