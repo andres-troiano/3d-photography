@@ -108,3 +108,23 @@ The two figures below show the difference between the measured coordinates of th
 
 ### 3.3 Diameter measurement
 
+#### Mutual referencing of cameras
+
+Once the two cameras are calibrated, it is already possible to measure dimensions with either of them. However, the measurements of one and the other will differ from each other by one translation. This is so because each camera was calibrated taking a different corner of the trapezoid as reference. Then the measurements of both cameras will differ in a translation equal to the one that leads from one corner to another of the trapezoid. To solve this problem, it is necessary to determine the magnitude of this translation, and compensate it by moving the calibration of one of the two cameras. To determine the magnitude of the translation, we sought to measure the same corner with both cameras, and calculate the difference between both measurements. This was done as follows:
+
+1. The trapezoid was located so that the two cameras can see the same corner, as schematized in figure below. In this way the pattern was in a horizontal position.
+
+<img src="images/puesta_en_comun.png" width="400">
+
+2. A sweep was made detecting this corner with both cameras, in the entire visible field. 
+3. The points obtained were transformed to the space of millimeters with the calibration just performed. In the figure below it can be seen that the profiles measured by the two cameras have a relative offset, which is equal to the offset between two corners of the trapezoid.
+
+<img src="images/grafico_offset_perfiles.png" width="400">
+
+4. For each scan point, the translation between the coordinates of the corner measured by camera 1 and those given by camera 2 is calculated. The components $x$ and $y$ of the translation for each scan point are shown in figure \ref{fig_offset_plano}. In these figures it can be seen that the \textit{offset} between cameras remains quite uniform in the $x,y$ plane, with a certain reduction in the region of smaller $x$.
+
+<img src="images/offset_xy_trapecio.png" width="400">
+
+5. The average value of the two distributions shown in the figure above is calculated, and it is used to apply a translation to the polynomials corresponding to one of the cameras. In this way, both are referenced to a common origin.
+
+#### Diameter measurement
