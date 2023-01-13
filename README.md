@@ -121,10 +121,46 @@ Once the two cameras are calibrated, it is already possible to measure dimension
 
 <img src="images/grafico_offset_perfiles.png" width="400">
 
-4. For each scan point, the translation between the coordinates of the corner measured by camera 1 and those given by camera 2 is calculated. The components $x$ and $y$ of the translation for each scan point are shown in figure \ref{fig_offset_plano}. In these figures it can be seen that the \textit{offset} between cameras remains quite uniform in the $x,y$ plane, with a certain reduction in the region of smaller $x$.
+4. For each scan point, the translation between the coordinates of the corner measured by camera 1 and those given by camera 2 is calculated. The components $x$ and $y$ of the translation for each scan point are shown in figure below. In these figures it can be seen that the offset between cameras remains quite uniform in the $x,y$ plane, with a certain reduction in the region of smaller $x$.
 
 <img src="images/offset_xy_trapecio.png" width="400">
 
 5. The average value of the two distributions shown in the figure above is calculated, and it is used to apply a translation to the polynomials corresponding to one of the cameras. In this way, both are referenced to a common origin.
 
 #### Diameter measurement
+
+Once the two calibrations were referenced to a common origin, the data from both cameras was combined and fitted by a circle. For this, an algebraic algorithm developed by Brown University's mathematician [Gabriel Taubin](https://engineering.brown.edu/people/gabriel-taubin) was used. The figure below shows the data measured by the cameras (in blue and red), together with the circle that best fits them (black dotted line).
+
+<img src="images/trapecio/34700630_medicion.png" width="400">
+
+The figure below shows the radial error of the fit.
+
+<img src="images/trapecio_error_circulo.png" width="400">
+
+The table below shows the difference between the measured and real diameter of each pattern, both measuring with a separate camera and combining the data from both.
+
+| Diameter (mm) | C1 error (μm) | C2 error (μm) | Total error (μm) |
+| --------------|---------------|---------------|----------------- |
+| 139.707       | -245          | -5            | -147             |
+| 168.310       | -172          | 186           | -168             |
+| 177.805       | -166          | 204           | -157             |
+
+#### Quantifying the error introduced by Taubin's algorithm
+
+Since the method of measuring the diameter of cylindrical patterns requires the use of the Taubin algorithm, it was studied how the quality of the fit is affected by the available angular aperture. For this, an ideal circle of 178 mm in diameter was taken and a normal error was added to the components $x$ and $y$, thus modeling the experimental error. This distribution was centered at 0, but its standard deviation was equal to 100 µm. The figure below shows a semicircle generated in this way.
+
+<img src="images/error_taubin_1.png" width="400">
+
+1000 equivalent samples were randomly produced, measuring the diameter in each case using Taubin's algorithm. The difference between this measurement and the theoretical value (178 mm) was calculated, and the results were plotted in the histogram shown in the figure below.
+
+<img src="images/error_taubin_2.png" width="400">
+
+The standard deviation of this distribution was taken as a measure of the error committed. It is expected that the measured diameter will be less accurate the smaller the arc available. To study the limits of this method, the process was repeated, delimiting the visible angle more and more. Half circles were generated, and then the arc was progressively reduced by 10°. The figure below shows the error in the measured diameter, as a function of the angle.
+
+<img src="images/error_taubin.png" width="400">
+
+As can be seen, for profiles of more than 50° the error is less than 3 μm, while below 20° it increases above 16 μm. This allows us to conclude that the fit of the circle using Taubin's algorithm does not introduce a significant error.
+
+## 4. Conclusions
+
+A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal pattern, a hexagonal pattern, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. Although all the measurements made had the precision sought, the determination of the uncertainty of the system for future measurements remains pending, which could not be done within the terms of this work.
