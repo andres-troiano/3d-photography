@@ -11,7 +11,7 @@
     3.3 [Mutual referencing of cameras](#sec_33)<br>
     3.4 [Diameter measurement](#sec_34)<br>
     3.5 [Quantifying the error introduced by Taubin's algorithm](#sec_35)<br>
-4. [Conclusion](#sec_32)<br>
+4. [Conclusion](#sec_4)<br>
 
 ## Abstract <a class="anchor" id="sec_0"></a>
 
