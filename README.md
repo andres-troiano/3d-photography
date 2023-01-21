@@ -45,7 +45,7 @@ Cameras and lasers were mounted onto two arms with a relative inclination of 60Â
 
 ## 3. Calibration using a trapezoidal standard <a class="anchor" id="sec_3"></a>
 
-As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a reference object fixed to the positioners, whose position can be measured with great precision. Then the transformation that goes from the coordinate system of the cameras to that of the positioners is modeled. Finally, with this model it is possible to transform the images captured by the cameras to lengths in the physical world, and thus measure defects in tubes with great precision. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
+As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a reference object fixed to the linear stages, whose position can be measured with great precision. Then the transformation that goes from the coordinate system of the cameras to that of the stages is modeled. Finally, with this model it is possible to transform the images captured by the cameras to lengths in the physical world, and thus measure defects in tubes with great precision. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
 
 <img src="images/trapecio_con_camaras_2.png" width="400">
 
