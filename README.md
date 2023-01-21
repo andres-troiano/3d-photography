@@ -1,4 +1,4 @@
-# 3D profilometry using laser triangulation
+# 3D Profilometry using Laser Triangulation
 
 0. [Abstract](#sec_0)<br>
 1. [Introduction](#sec_1)<br>
@@ -15,51 +15,51 @@
 
 ## Abstract <a class="anchor" id="sec_0"></a>
 
-A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal pattern, a hexagonal pattern, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs.
+A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to map the points in the camera coordinate system with their corresponding ones in the physical space. 3 variants of this method were studied, using different reference objects: a trapezoidal standard, a hexagonal standard, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. This work was done in the context of an internship at [Tenaris](https://www.tenaris.com/en), which doubled as a Master's thesis in Physics.
 
 ## 1. Introduction <a class="anchor" id="sec_1"></a>
 
-Three-dimensional scanning technologies play a vital role in a wide variety of industries and disciplines, including factory process control, the healthcare sector, civil engineering, forensics and archaeology. The primary purpose is to create images or 3D models of an object for various purposes, such as reverse engineering, quality testing, or reconstruction of historical artifacts.
+Three-dimensional scanning technologies play a vital role in a wide variety of industries and disciplines, including factory process control, the healthcare sector, civil engineering, forensics and archaeology. Its primary purpose is to create images or 3D models of an object for various uses, such as reverse engineering, quality testing, or reconstruction of historical artifacts.
 
 ### 1.1 Triangulation methods <a class="anchor" id="sec_11"></a>
 
-Of the various existing 3D scanning methods, the most widely used are those in which the target is illuminated with a laser or a fringe pattern. Laser methods fall into 3 categories: triangulation, time of flight , and phase shift. In triangulation methods, a narrow band of light projected onto a three-dimensional surface produces a line of illumination that will look distorted from any perspective other than the projector (see figure below). Analysis of the shape of these linear images can then be used to make an accurate geometric reconstruction of the object's surface. There are four main components of a 3D triangulation system: the camera, the linear projector which is typically a laser, a mechanism that moves the object or laser-camera pair through the system's field of view, and the software to process the image. accurately capture and convert distances between pixels into height differences
+Of the various existing 3D scanning methods, the most widely used are those in which the target is illuminated with a laser or a fringe pattern. Laser methods fall into 3 categories: triangulation, time of flight , and phase shift. In triangulation methods, a narrow band of light projected onto a three-dimensional surface produces a line of illumination that will look distorted from any perspective other than that of the projector (see figure below). Analysis of the shape of these linear images can then be used to make an accurate geometric reconstruction of the object's surface. There are four main components of a 3D triangulation system: the camera, the linear projector which is typically a laser, a mechanism that moves the object or laser-camera pair through the system's field of view, and the software to process the image, and accurately capture and convert distances between pixels into height differences.
 
 <img src="images/triangulacion.png" width="400">
 
 ### 1.2 Quality control for tubular products <a class="anchor" id="sec_12"></a>
 
-At the [Tenaris research center](https://www.tenaris.com/en/sustainability/innovation/), 3D profilometry equipment was developed to measure defects on the surface of tubular steel products. These tubes have diameters in the range of 5.5'' to 9 5/8'' (140 to 244 mm). International quality standards require that surface defects do not exceed 5% of the tube wall thickness, which ranges from 4.5 mm to 12 mm depending on the product. The defects to be resolved have dimensions ranging from 300 μm to 600 μm. For the present work, an equipment was developed, based on laser triangulations. There are precedents on commercial equipment of this kind by companies such  as IMS ans SMS.
+At the [Tenaris research center](https://www.tenaris.com/en/sustainability/innovation/), 3D profilometry equipment was developed to measure defects on the surface of tubular steel products for the oil and gas industry. These tubes have diameters in the range of 5.5'' to 9 5/8'' (140 to 244 mm). International quality standards require that surface defects do not exceed 5% of the tube wall thickness, which ranges from 4.5 mm to 12 mm depending on the product. The defects to be resolved have dimensions ranging from 300 μm to 600 μm. For the present work, an equipment was developed based on laser triangulation. There are precedents on commercial equipment of this kind by companies such  as [IMS](https://www.ims-gmbh.de/?lang=en) ans [SMS](https://www.sms-group.com/).
 
-For this purpose, a reduced system consisting of 2 arms instead of 6 was assembled, in order to capture the essential characteristics of the problem, such as the inclination between the arms and the distance to the center of the system. The figure below shows an assembly diagram.
+For this purpose, a reduced system consisting of 2 arms instead of 6 was assembled, in order to capture the essential characteristics of the problem, such as the inclination between the arms and the distance to the center of the system. The figure below shows a diagram of the reduced system built for this work.
 
 <img src="images/2_brazos.png" width="400">
 
 ## 2. Experimental setup <a class="anchor" id="sec_2"></a>
 
-In order to assemble a system like the one seen above, two lasers were used: an Osela Streamline and a Coherent StingRay, both 660 nm, with a fan angle of 20° and focused at 390 mm. The width of the laser line was approximately 200 µm. Automation Technology C2-2040 high-speed cameras were used, with a resolution of 2048 x 1088 pixels, which were operated at a speed of 333 fps. Spacecom Pyxis 12 lenses and Midopt BP660 bandpass filters with a useful range of 640-680 nm were used together with the cameras.
+In order to assemble a system like the one seen above, two lasers were used: an Osela Streamline and a Coherent StingRay, with a wavelength of 660 nm, a fan angle of 20°, and focused at 390 mm. The width of the laser line was approximately 200 µm. Automation Technology C2-2040 high-speed cameras were used, with a resolution of 2048 x 1088 pixels, which were operated at a speed of 333 fps. Spacecom Pyxis 12 lenses and Midopt BP660 bandpass filters in the 640-680 nm range were used together with the cameras.
 
-The cameras and lasers were mounted arranged in two arms with a relative inclination of 60°, with a camera-laser angle of 45°. The figure below shows a general view of the complete assembly.
+Cameras and lasers were mounted onto two arms with a relative inclination of 60°, with a camera-laser angle of 45°. The figure below shows a general view of the experimental setup.
 
 <img src="images/vista_general.jpg" width="400">
 
-## 3. Calibration using trapezoidal standard <a class="anchor" id="sec_3"></a>
+## 3. Calibration using a trapezoidal standard <a class="anchor" id="sec_3"></a>
 
-As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a determined reference object fixed to the positioners, whose position is precisely known. Then a map is modeled that links the coordinate systems of the cameras with that of the positioners, with which it will be possible to determine the position in space of the target from the signal on the camera sensors. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
+As mentioned previously, the goal of this work is to calibrate the system by scanning the entire field of view of the cameras with a reference object fixed to the positioners, whose position can be measured with great precision. Then the transformation that goes from the coordinate system of the cameras to that of the positioners is modeled. Finally, with this model it is possible to transform the images captured by the cameras to lengths in the physical world, and thus measure defects in tubes with great precision. An Automation Technology trapezoidal standard was used. This standard was placed so that two of its corners are oriented towards the two cameras, as shown in the figure below. Corners 1 and 2 were detected with cameras 1 and 2 respectively.
 
 <img src="images/trapecio_con_camaras_2.png" width="400">
 
 ### 3.1 Algorithm for finding corners <a class="anchor" id="sec_31"></a>
 
-The purpose of this algorithm is to identify the 2 lines that make up the visible corner in the sensor (if there are any) and find their intersection. The steps of the algorithm are as follows:
+The purpose of this algorithm is to identify the 2 straight lines that define the visible corner in the sensor (if any) and find their intersection. The algorithm consists of the following steps:
 
 1. First, a profile is identified in the central region of the scan.
-2. Then all the profiles are ordered in order of proximity with respect to that first profile.
-3. In the first profile, the user manually points out by clicking the approximate position of the corner to be found (see figure below).
+2. Then all the profiles are sorted by proximity with respect to that first profile.
+3. For the first profile, the user provides the coordinates of the corner by clicking on it when prompted (see figure below).
 
 <img src="images/eleccion_esquina.png" width="400">
 
-4. Starting from the coordinates ($x_0$, $y_0$) given by the user, the algorithm divides the profile in two, to the left and to the right of $x_0$. Take a range of 40 pixels on either side of $x_0$ and fit each of the two regions by lines. It then performs an iteration in which it discards those points that are more than 3 standard deviations away from the fit, and refits with the remaining points. In this way, it finds the lines that best fit the two faces of the corner, and determines its coordinates from the intersection of these two lines.
+4. Starting from coordinates (x~0~, $y_0$) given by the user, the algorithm divides the profile in two, to the left and to the right of $x_0$. Take a range of 40 pixels on either side of $x_0$ and fit each of the two regions by lines. It then performs an iteration in which it discards those points that are more than 3 standard deviations away from the fit, and refits with the remaining points. In this way, it finds the lines that best fit the two faces of the corner, and determines its coordinates from the intersection of these two lines.
 5. Once the corner of the first profile is found, the algorithm continues with the next closest to the first. In this case it is no longer necessary for the user to provide an initial estimate of the position of the corner. Instead the algorithm takes a cutout of the first profile, made up of an environment of the corner, and compares the new profile with the corner already found until it identifies the region of the new profile that most resembles the previous corner. For this, the new profile and the previous corner are plotted superimposed, starting from the left end of the new profile (see figure below).
 
 <img src="images/guess_next_corner/correlacion_paso_1.png" width="400">
@@ -114,7 +114,7 @@ The two figures below show the difference between the measured coordinates of th
 
 Once the two cameras are calibrated, it is already possible to measure dimensions with either of them. However, the measurements of one and the other will differ from each other by one translation. This is so because each camera was calibrated taking a different corner of the trapezoid as reference. Then the measurements of both cameras will differ in a translation equal to the one that leads from one corner to another of the trapezoid. To solve this problem, it is necessary to determine the magnitude of this translation, and compensate it by moving the calibration of one of the two cameras. To determine the magnitude of the translation, we sought to measure the same corner with both cameras, and calculate the difference between both measurements. This was done as follows:
 
-1. The trapezoid was located so that the two cameras can see the same corner, as schematized in figure below. In this way the pattern was in a horizontal position.
+1. The trapezoid was located so that the two cameras can see the same corner, as schematized in figure below. In this way the standard was in a horizontal position.
 
 <img src="images/puesta_en_comun.png" width="400">
 
@@ -139,7 +139,7 @@ The figure below shows the radial error of the fit.
 
 <img src="images/trapecio_error_circulo.png" width="400">
 
-The table below shows the difference between the measured and real diameter of each pattern, both measuring with a separate camera and combining the data from both.
+The table below shows the difference between the measured and real diameter of each standard, both measuring with a separate camera and combining the data from both.
 
 | Diameter (mm) | C1 error (μm) | C2 error (μm) | Total error (μm) |
 | --------------|---------------|---------------|----------------- |
@@ -149,7 +149,7 @@ The table below shows the difference between the measured and real diameter of e
 
 ### 3.5 Quantifying the error introduced by Taubin's algorithm <a class="anchor" id="sec_35"></a>
 
-Since the method of measuring the diameter of cylindrical patterns requires the use of the Taubin algorithm, it was studied how the quality of the fit is affected by the available angular aperture. For this, an ideal circle of 178 mm in diameter was taken and a normal error was added to the components $x$ and $y$, thus modeling the experimental error. This distribution was centered at 0, but its standard deviation was equal to 100 µm. The figure below shows a semicircle generated in this way.
+Since the method of measuring the diameter of cylindrical standards requires the use of the Taubin algorithm, it was studied how the quality of the fit is affected by the available angular aperture. For this, an ideal circle of 178 mm in diameter was taken and a normal error was added to the components $x$ and $y$, thus modeling the experimental error. This distribution was centered at 0, but its standard deviation was equal to 100 µm. The figure below shows a semicircle generated in this way.
 
 <img src="images/error_taubin_1.png" width="400">
 
@@ -165,4 +165,4 @@ As can be seen, for profiles of more than 50° the error is less than 3 μm, whi
 
 ## 4. Conclusions <a class="anchor" id="sec_4"></a>
 
-A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal pattern, a hexagonal pattern, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. Although all the measurements made had the precision sought, the determination of the uncertainty of the system for future measurements remains pending, which could not be done within the terms of this work.
+A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal standard, a hexagonal standard, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. Although all the measurements made had the precision sought, the determination of the uncertainty of the system for future measurements remains pending, which could not be done within the terms of this work.
