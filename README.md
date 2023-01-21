@@ -11,7 +11,7 @@
     3.3 [Mutual referencing of cameras](#sec_33)<br>
     3.4 [Diameter measurement](#sec_34)<br>
     3.5 [Quantifying the error introduced by Taubin's algorithm](#sec_35)<br>
-4. [Conclusions](#sec_32)<br>
+4. [Conclusion](#sec_32)<br>
 
 ## Abstract <a class="anchor" id="sec_0"></a>
 
@@ -163,6 +163,6 @@ The standard deviation of this distribution was taken as a measure of the error 
 
 As can be seen, for profiles of more than 50° the error is less than 3 μm, while below 20° it increases above 16 μm. This allows us to conclude that the fit of the circle using Taubin's algorithm does not introduce a significant error.
 
-## 4. Conclusions <a class="anchor" id="sec_4"></a>
+## 4. Conclusion <a class="anchor" id="sec_4"></a>
 
 A 3D laser triangulation profilometry system consisting of two camera-laser pairs was calibrated. The visible field was scanned with a reference object used for the sizing of industrial products, in order to relate the points in the camera coordinate system with their corresponding ones in space. 3 variants of this method were studied, using different reference objects: a trapezoidal standard, a hexagonal standard, and an original design featuring 90 corners. These 3 variants were put to the test by measuring 3 cylindrical standards with diameters ranging from 140 mm to 177 mm, obtaining in all cases errors that did not exceed 135 μm. Two of the methods used are extensible to 6 camera-laser pairs. All the measurements made had the sought precision.
